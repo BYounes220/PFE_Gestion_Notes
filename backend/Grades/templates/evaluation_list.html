@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Evaluation List</title>
+</head>
+<body>
+    <h1>List of Evaluations</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Note Ordinaire</th>
+                <th>Note Rattrapage</th>
+                <th>Annee</th>    
+                <th> element</th>
+                <th> Etudiant</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for evaluation in evaluations %}
+                <tr>
+                    <td>{{ evaluation.id }}</td>
+                    <td>{{ evaluation.note_ordinaire }}</td>
+                    <td>{{ evaluation.note_rattrapage }}</td>
+                    <td>{{ evaluation.annee }}</td>
+                    <td>{{ evaluation.id_element.description }}</td> 
+                    <td>{{ evaluation.id_etudiant.nom_etudiant }} {{ evaluation.id_etudiant.prenom_etudiant }}</td> 
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
