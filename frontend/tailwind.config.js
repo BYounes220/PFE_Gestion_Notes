@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    "src/components/Evaluations.jsx",
+    "src/components/Grades/Evaluations.jsx",
     "src//components/App.jsx"
   ],
   theme: {

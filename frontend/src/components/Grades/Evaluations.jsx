@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+
 function Evaluations() {
     const [evaluations, setEvaluations] = useState([]);
     const [error, setError] = useState(null);
@@ -9,7 +10,7 @@ function Evaluations() {
 
     useEffect(() => {
         axios
-            .get("http://127.0.0.1:8000/notes/evaluations/")
+            .get("http://127.0.0.1:8000/Grades/evaluations/")
             .then((response) => {
                 setEvaluations(response.data);
             })
@@ -50,7 +51,7 @@ function Evaluations() {
         }
     
         axios
-            .put(`http://127.0.0.1:8000/notes/evaluations/${id}/`, updatedData)
+            .put(`http://127.0.0.1:8000/Grades/evaluations/${id}/`, updatedData)
             .then((response) => {
                 const updatedEvaluations = evaluations.map((evaluation) =>
                     evaluation.id === id ? response.data : evaluation
