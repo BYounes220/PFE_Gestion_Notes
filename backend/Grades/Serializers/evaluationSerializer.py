@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from Grades.Models.evaluation import Evaluation
+from Grades.models import Evaluation
 class evaluationSerializer(serializers.ModelSerializer):
     #the class below provide meta data about the model to be serialised
     class Meta:

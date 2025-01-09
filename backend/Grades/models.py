@@ -1,11 +1,4 @@
 from django.db import models
-
-
-#make sure that the app containg the model is included in the installed apps at settings.py
-from .Models.element import Element
-from .Models.etudiant import Etudiant 
-from .Models.evaluation import Evaluation
-from .Models.professeur import Professeur
 # Create your models here.
 
 class Etudiant(models.Model):
@@ -13,7 +6,7 @@ class Etudiant(models.Model):
         HOMME = 'H', 'Homme'
         FEMME = 'F', 'Femme'
 
-    cne = models.CharField(max_length=10, unique=True)
+    cne = models.CharField(primary_key=True,max_length=10, unique=True)
     cin = models.CharField(max_length=8, unique=True)
     nom_etudiant = models.CharField(max_length=20)
     prenom_etudiant = models.CharField(max_length=20)
@@ -30,6 +23,7 @@ class Etudiant(models.Model):
 
 
 class Professeur(models.Model):
+    id_professeur = models.CharField(primary_key=True,max_length=30)
     cin = models.CharField(max_length=7, unique=True)
     nom_professeur = models.CharField(max_length=20, default='')
     prenom_professeur = models.CharField(max_length=20, default='')
@@ -43,6 +37,7 @@ class Professeur(models.Model):
 
 
 class Element(models.Model):
+    nom_element = models.CharField(max_length=50)
     description = models.CharField(max_length=200, unique=True)
     volums_horaire = models.IntegerField()
     type_element = models.CharField(max_length=20)
@@ -58,12 +53,12 @@ class Element(models.Model):
 class Evaluation(models.Model):
     note_ordinaire = models.DecimalField(max_digits=5, decimal_places=2)
     note_rattrapage = models.DecimalField(max_digits=5, decimal_places=2)
-    annee = models.IntegerField()
-    id_element = models.ForeignKey(Element, on_delete=models.CASCADE)
-    id_etudiant = models.ForeignKey(Etudiant, on_delete=models.CASCADE)
+    annee_academique = models.CharField(max_length=12)
+    element = models.ForeignKey(Element, on_delete=models.CASCADE)
+    etudiant = models.ForeignKey(Etudiant, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ('id_element', 'id_etudiant', 'annee')
+        unique_together = ('element', 'etudiant', 'annee_academique')
 
     def __str__(self):
         return f"{self.id_etudiant} - {self.id_element} ({self.annee})"

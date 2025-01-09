@@ -16,7 +16,6 @@ from .models import Professeur, Evaluation
 from rest_framework.views import APIView
 from rest_framework.response import Response  
 from .serializers import ProfesseurSerializer, EvaluationsSerializer
-from .serializers import EvaluationsSerializer
 
 class ProfesseurViewSet(generics.CreateAPIView):
     queryset = Professeur.objects.all()

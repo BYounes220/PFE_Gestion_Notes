@@ -1,12 +1,12 @@
 from django.urls import path
-from .Views.notesModification import NotesModification
-from .Views.notesRecherche import NotesRecherche
-from .Views.elementsListing import ElementsListing
 
+from .Views.elementsListing import ElementsListing
+from django.urls import path
+from .views import ProfesseurViewSet, EvaluationListCreateView, EvaluationRetrieveUpdateDestroyView
 
 urlpatterns = [
-    # Example route: Homepage of the Grades app
-    path('saisie/', NotesModification.as_view() , name='insertion'),
-    path('recherche/', NotesRecherche.as_view() , name='cherche'),
     path('elements/', ElementsListing.as_view(), name='list'),
+    path('professeur/register/', ProfesseurViewSet.as_view(), name='professeur-register'),
+    path('evaluations/', EvaluationListCreateView.as_view(), name='evaluation-list-create'),
+    path('evaluations/<int:pk>/', EvaluationRetrieveUpdateDestroyView.as_view(), name='evaluation-detail'),
 ]

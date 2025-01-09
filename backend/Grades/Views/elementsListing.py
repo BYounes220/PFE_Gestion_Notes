@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from Grades.Models.element import Element
-from Grades.serializers.elementSerializer import ElementSerializer
+from Grades.models import Element
+from Grades.Serializers.elementSerializer import ElementSerializer
 
 class ElementsListing(APIView):
     permission_classes= [IsAuthenticated]
