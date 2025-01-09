@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Navbar from "../../components/Grades/Navbar";
 import GradesHeader from "../../components/Grades/GradesHeader";
-
+import Evaluations from "../../components/Grades/Evaluations";
 function Grades() {
 	//this the name of the selected element in the navbar
 	const [elementName, setElement] = useState("");
@@ -11,9 +11,7 @@ function Grades() {
 			<GradesHeader setSearchedEvaluations={setSearchedEvaluations} />
 			<div className={`flex flex-row w-screen`}>
 				<Navbar setElement={setElement} />
-				<div
-					className={`flex flex-col min-h-screen overflow-y-auto flex-grow `}
-				></div>
+				<Evaluations />
 			</div>
 		</div>
 	);
