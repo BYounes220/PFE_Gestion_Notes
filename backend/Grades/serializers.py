@@ -23,9 +23,9 @@ class EtudiantSerializer(serializers.ModelSerializer):
 
 
 class EvaluationsSerializer(serializers.ModelSerializer):
-    id_etudiant = serializers.PrimaryKeyRelatedField(queryset=Etudiant.objects.all())
-    id_element = serializers.PrimaryKeyRelatedField(queryset=Element.objects.all())
-    element_description = serializers.CharField(source='id_element.description', read_only=True)
+    #id_etudiant = serializers.PrimaryKeyRelatedField(queryset=Etudiant.objects.all())
+    #id_element = serializers.PrimaryKeyRelatedField(queryset=Element.objects.all())
+    element_description = serializers.CharField(source='element.description', read_only=True)
     full_name_etudiant = serializers.SerializerMethodField()
 
     class Meta:
@@ -34,7 +34,7 @@ class EvaluationsSerializer(serializers.ModelSerializer):
             'id',
             'note_ordinaire',
             'note_rattrapage',
-            'annee',
+            'annee_academique',
             'etudiant',  
             'element',
             'full_name_etudiant',  
@@ -42,7 +42,7 @@ class EvaluationsSerializer(serializers.ModelSerializer):
         ]
 
     def get_full_name_etudiant(self, obj):
-        return f"{obj.id_etudiant.prenom_etudiant} {obj.id_etudiant.nom_etudiant}"
+        return f"{obj.etudiant.prenom_etudiant} {obj.etudiant.nom_etudiant}"
     
 
 class ProfesseurSerializer(serializers.ModelSerializer):

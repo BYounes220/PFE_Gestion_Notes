@@ -25,7 +25,7 @@ class ProfesseurViewSet(generics.CreateAPIView):
 class EvaluationListCreateView(generics.ListCreateAPIView):
     queryset = Evaluation.objects.all()
     serializer_class = EvaluationsSerializer
-
+    permission_classes = [IsAuthenticated]
 
 class EvaluationRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Evaluation.objects.all()

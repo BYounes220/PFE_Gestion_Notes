@@ -11,7 +11,9 @@ function Grades() {
 			<GradesHeader setSearchedEvaluations={setSearchedEvaluations} />
 			<div className={`flex flex-row w-screen`}>
 				<Navbar setElement={setElement} />
-				<Evaluations />
+				<div className="overflow-y-auto flex-grow">
+					<Evaluations />
+				</div>
 			</div>
 		</div>
 	);

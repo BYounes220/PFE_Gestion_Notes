@@ -10,3 +10,4 @@ urlpatterns = [
     path('evaluations/', EvaluationListCreateView.as_view(), name='evaluation-list-create'),
     path('evaluations/<int:pk>/', EvaluationRetrieveUpdateDestroyView.as_view(), name='evaluation-detail'),
 ]
+
