@@ -35,9 +35,9 @@ class EvaluationsSerializer(serializers.ModelSerializer):
             'note_ordinaire',
             'note_rattrapage',
             'annee_academique',
-            'etudiant',  
+            'etudiant',
             'element',
-            'full_name_etudiant',  
+            'full_name_etudiant',
             'element_description',
         ]
 

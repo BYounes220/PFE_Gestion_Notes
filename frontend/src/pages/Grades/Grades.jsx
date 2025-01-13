@@ -9,14 +9,15 @@ function Grades() {
 	const [evaluations, setEvaluations] = useState([]);
 
 	return (
-		<div className={`w-screen flex flex-wrap h-screen`}>
+		<div className={`w-screen flex flex-wrap h-screen bg-[#A2D2FF]`}>
 			<GradesHeader
 				setSearchedEvaluations={setSearchedEvaluations}
 				evaluations={evaluations}
+				elementName={elementName}
 			/>
 			<div className={`flex flex-row w-screen`}>
 				<Navbar setElement={setElement} />
-				<div className="overflow-y-auto flex-grow">
+				<div className="overflow-y-auto flex-grow bg-[#A2D2FF] shadow-lg rounded-lg">
 					<Evaluations
 						evaluations={evaluations}
 						setEvaluations={setEvaluations}

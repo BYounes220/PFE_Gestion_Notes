@@ -33,9 +33,7 @@ function Navbar({ setElement }) {
 						</h2>
 						{elements.map((e, index) => (
 							<li
-								onClick={() =>
-									selectElement(e.nom_element, index)
-								}
+								onClick={() => selectElement(e, index)}
 								className={`${
 									selectedElement === index
 										? "bg-blue-500 text-white"
