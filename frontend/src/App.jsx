@@ -6,6 +6,7 @@ import Protected from "./components/auth/Protected";
 import Login from "./pages/auth/Login";
 import Grades from "./pages/Grades/Grades";
 import Home from "./pages/Home";
+import Evaluations from "./components/Grades/Evaluations";
 function App() {
 	const [count, setCount] = useState(0);
 
@@ -31,6 +32,14 @@ function App() {
 					}
 				/>
 				<Route
+					path="/evaluations"
+					element={
+						<Protected>
+							<Evaluations />
+						</Protected>
+					}
+				/>
+				<Route
 					path="/"
 					element={
 						<Protected>
@@ -40,7 +49,7 @@ function App() {
 				/>
 				<Route path="/login" element={<Login />} />
 				<Route path="/logout" element={<Logout />} />
-				<Route path="/register" element={<RegisterAndLogout />} />
+				<Route path="/register" element={<RegisterAndLogout />} />			
 			</Routes>
 		</BrowserRouter>
 	);
