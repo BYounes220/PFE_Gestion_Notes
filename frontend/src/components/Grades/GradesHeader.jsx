@@ -2,25 +2,20 @@ import { useState } from "react";
 import searchIcon from "../../assets/icons8-search.svg";
 import LOGO_EST from "../../assets/LOGO_EST.png";
 import api from "../../api";
+import Evaluations from "./Evaluations";
 
-function GradesHeader({ setSearchedEvaluations }) {
+function GradesHeader({ setSearchedEvaluations, evaluations }) {
 	const [query, setQuery] = useState("");
 	const [uploading, setUploading] = useState(false);
 	const [file, setFile] = useState(null);
 
 	const search = async (event) => {
-		try {
-			event.preventDefault();
-			const parametre = "cne";
-			const value = query;
-			const res = await api.post("/Grades/recherche/", {
-				parametre,
-				value,
-			});
-			setSearchedEvaluations(res.data);
-		} catch (error) {
-			console.log(error);
-		} //in case the status was 404
+		event.preventDefault();
+		evaluations.forEach((element) => {
+			if (element.etudiant === query) {
+				setSearchedEvaluations([element]);
+			}
+		});
 	};
 	const load = () => {
 		const reader = new FileReader();

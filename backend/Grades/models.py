@@ -52,7 +52,7 @@ class Element(models.Model):
 
 class Evaluation(models.Model):
     note_ordinaire = models.DecimalField(max_digits=5, decimal_places=2)
-    note_rattrapage = models.DecimalField(max_digits=5, decimal_places=2)
+    note_rattrapage = models.DecimalField(max_digits=5, decimal_places=2,null=True)
     annee_academique = models.CharField(max_length=12)
     element = models.ForeignKey(Element, on_delete=models.CASCADE)
     etudiant = models.ForeignKey(Etudiant, on_delete=models.CASCADE)
