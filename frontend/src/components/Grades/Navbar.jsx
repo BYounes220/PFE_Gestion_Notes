@@ -25,7 +25,7 @@ function Navbar({ setElement }) {
 
 	return (
 		<>
-			<div className="h-screen w-[200px] bg-[#FFCC00] text-gray-800 p-1 flex shadow-sm shadow-amber-400 border-t border-[#A9D0F5]">
+			<div className="h-screen w-[200px] bg-[#8ECAE6] text-[#023047] p-1 flex shadow-sm shadow-amber-400 border-t border-[#A9D0F5]">
 				<div className="m-1 w-full overflow-y-auto">
 					<ul className="p-1">
 						<h2 className="mb-3  text-2xl font-semibold font-serif text-center">

@@ -2,15 +2,23 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import searchIcon from "../../assets/icons8-search.svg";
 import LOGO_EST from "../../assets/LOGO_EST.png";
+import filterIcon from "../../assets/filter.svg";
 import api from "../../api";
 import Evaluations from "./Evaluations";
 import ExcelJS from "exceljs";
 
-function GradesHeader({ setSearchedEvaluations, evaluations, elementName }) {
+function GradesHeader({
+	setSearchedEvaluations,
+	evaluations,
+	elementName,
+	filter,
+	setFilter,
+}) {
 	const [query, setQuery] = useState("");
 	const [uploading, setUploading] = useState(false);
 	const [file, setFile] = useState("");
 	const navigate = useNavigate();
+
 	const search = async (event) => {
 		event.preventDefault();
 		evaluations.forEach((element) => {
@@ -18,6 +26,11 @@ function GradesHeader({ setSearchedEvaluations, evaluations, elementName }) {
 				setSearchedEvaluations([element]);
 			}
 		});
+	};
+
+	const Filter = (e) => {
+		if (filter) setFilter(false);
+		else setFilter(true);
 	};
 
 	useEffect(() => {
@@ -94,6 +107,16 @@ function GradesHeader({ setSearchedEvaluations, evaluations, elementName }) {
 					className="flex bg-white m-2 mt-3 h-9 place-self-center ml-auto rounded-md"
 					onSubmit={search}
 				>
+					<button
+						className={`h-9 w-10 flex justify-center items-center`}
+						type="submit"
+					>
+						<img
+							src={searchIcon}
+							alt="Search Icon"
+							className="w-5 h-5"
+						/>
+					</button>
 					<input
 						placeholder="cne"
 						className={`h-9  w-64 rounded-md pl-1 focus:outline-none focus:shadow-green-500 focus:shadow-sm`}
@@ -103,11 +126,11 @@ function GradesHeader({ setSearchedEvaluations, evaluations, elementName }) {
 					/>
 					<button
 						className={`h-9 w-10 flex justify-center items-center`}
-						type="submit"
+						onClick={Filter}
 					>
 						<img
-							src={searchIcon}
-							alt="Search Icon"
+							src={filterIcon}
+							alt="filter Icon"
 							className="w-5 h-5"
 						/>
 					</button>
