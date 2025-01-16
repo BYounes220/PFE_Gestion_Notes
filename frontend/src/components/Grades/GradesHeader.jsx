@@ -9,7 +9,7 @@ import ExcelJS from "exceljs";
 
 function GradesHeader({
 	setSearchedEvaluations,
-	evaluations,
+	allEvaluations,
 	elementName,
 	filter,
 	setFilter,
@@ -19,27 +19,21 @@ function GradesHeader({
 	const [file, setFile] = useState("");
 	const navigate = useNavigate();
 
-//	const search = async (event) => {
-
-	/* const search = async (event) => {
-		event.preventDefault();
-		evaluations.forEach((element) => {
-			if (element.etudiant === query) {
+	const search = (e) => {
+		e.preventDefault();
+		if (query === "") return;
+		let found = false;
+		allEvaluations.forEach((element) => {
+			if (
+				element.etudiant === query &&
+				element.nom_element === elementName
+			) {
 				setSearchedEvaluations([element]);
+				found = true;
 			}
 		});
-	}; */
-	const search = async (event) => {
-		event.preventDefault();
-		if (!query) {
-		  setSearchedEvaluations(evaluations);
-		} else {
-		  const filteredEvaluations = evaluations.filter((element) =>
-			element.etudiant.cne === query 
-		  );
-		  setSearchedEvaluations(filteredEvaluations); 
-		}
-	  };
+		if (!found) alert("no evalautions trouvées");
+	};
 
 	const Filter = (e) => {
 		if (filter) setFilter(false);
@@ -122,7 +116,7 @@ function GradesHeader({
 				>
 					<button
 						className={`h-9 w-10 flex justify-center items-center`}
-						type="submit"
+						onClick={search}
 					>
 						<img
 							src={searchIcon}
