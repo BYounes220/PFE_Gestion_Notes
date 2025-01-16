@@ -45,28 +45,31 @@ function Evaluations({ evaluations, setEvaluations, }) {
   };
 
   const handleSave = () => {
-    const updates = Object.entries(updatedNotes).map(([id, notes]) => {
-      const evaluation = evaluations.find((ev) => ev.id === parseInt(id));
-      return {
-        ...evaluation,
-        note_ordinaire: parseFloat(notes.note_ordinaire),
-        note_rattrapage: parseFloat(notes.note_rattrapage),
-      };
-    });
-
-    const invalid = updates.some(
-      (data) =>
-        isNaN(data.note_ordinaire) ||
-        data.note_ordinaire < 0 ||
-        data.note_ordinaire > 20 ||
-        data.note_rattrapage < 0 ||
-        data.note_rattrapage > 20
-    );
-
-    if (invalid) {
-      alert("Invalid values. Notes must be numbers between 0 and 20.");
-      return;
-    }
+	const updates = Object.entries(updatedNotes).map(([id, notes]) => {
+	  const evaluation = evaluations.find((ev) => ev.id === parseInt(id));
+  	  const noteRattrapage = parseFloat(notes.note_rattrapage);
+	  const finalNoteRattrapage = noteRattrapage > 12 ? 12 : noteRattrapage;
+  
+	  return {
+		...evaluation,
+		note_ordinaire: parseFloat(notes.note_ordinaire),
+		note_rattrapage: finalNoteRattrapage, 
+	  };
+	});
+  
+	const invalid = updates.some(
+	  (data) =>
+		isNaN(data.note_ordinaire) ||
+		data.note_ordinaire < 0 ||
+		data.note_ordinaire > 20 ||
+		data.note_rattrapage < 0 ||
+		data.note_rattrapage > 20
+	);
+  
+	if (invalid) {
+	  alert("Invalid values. Notes must be numbers between 0 and 20.");
+	  return;
+	}
 
     Promise.all(
       updates.map((updatedData) =>
