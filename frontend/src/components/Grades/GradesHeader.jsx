@@ -19,14 +19,27 @@ function GradesHeader({
 	const [file, setFile] = useState("");
 	const navigate = useNavigate();
 
-	const search = async (event) => {
+//	const search = async (event) => {
+
+	/* const search = async (event) => {
 		event.preventDefault();
 		evaluations.forEach((element) => {
 			if (element.etudiant === query) {
 				setSearchedEvaluations([element]);
 			}
 		});
-	};
+	}; */
+	const search = async (event) => {
+		event.preventDefault();
+		if (!query) {
+		  setSearchedEvaluations(evaluations);
+		} else {
+		  const filteredEvaluations = evaluations.filter((element) =>
+			element.etudiant.cne === query 
+		  );
+		  setSearchedEvaluations(filteredEvaluations); 
+		}
+	  };
 
 	const Filter = (e) => {
 		if (filter) setFilter(false);

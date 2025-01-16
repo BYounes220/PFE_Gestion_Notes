@@ -8,6 +8,7 @@ function Navbar({ setElement }) {
 		const getElements = async () => {
 			try {
 				const response = await api.get("/Grades/elements/");
+				console.log(JSON.stringify(response.data, null, 2)); 
 				if (Array.isArray(response.data)) {
 					setElements(response.data);
 				}
@@ -19,7 +20,7 @@ function Navbar({ setElement }) {
 	}, []);
 
 	const selectElement = (elementName, index) => {
-		setElement(elementName);
+		setElement(elementName.nom_element);
 		setSelectedElement(index);
 	};
 
@@ -38,7 +39,8 @@ function Navbar({ setElement }) {
 									selectedElement === index
 										? "bg-blue-500 text-white"
 										: ""
-								} m-1 p-1 border-b text-xl font-serif capitalize hover:bg-blue-500 hover:text-white overflow-x-auto `}
+								} m-1 p-1 border-b text-xl font-serif capitalize hover:bg-blue-500 hover:text-white overflow-x-auto cursor-pointer `}
+								
 							>
 								{e.nom_element}
 							</li>
