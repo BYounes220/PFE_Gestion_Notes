@@ -5,4 +5,4 @@ from Grades.models import Element
 class ElementSerializer(serializers.ModelSerializer):
     class Meta:
         model= Element
-        fields = ['nom_element']
+        fields = ['id','nom_element']

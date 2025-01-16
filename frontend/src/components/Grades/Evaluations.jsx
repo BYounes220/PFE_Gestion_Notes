@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
 import api from "../../api";
 
-function Evaluations() {
-  const [evaluations, setEvaluations] = useState([]);
+function Evaluations({ evaluations, setEvaluations, }) {
   const [error, setError] = useState(null);
-  const [editMode, setEditMode] = useState(false); 
+  const [editMode, setEditMode] = useState(false);
   const [updatedNotes, setUpdatedNotes] = useState({});
-  const [montions, setMontions] = useState({}); 
+  const [montions, setMontions] = useState({});
 
   useEffect(() => {
-    api
-      .get("/Grades/evaluations/")
+    api.get("/Grades/evaluations/")
       .then((response) => {
         const evaluationsData = Array.isArray(response.data)
           ? response.data
@@ -20,7 +18,7 @@ function Evaluations() {
       .catch(() => {
         setError("Failed to fetch evaluations.");
       });
-  }, []);
+  }, [setEvaluations]);
 
   const getMontion = (noteOrdinaire, noteRattrapage) => {
     return noteOrdinaire >= 12 || noteRattrapage >= 12 ? "VAL" : "NVAL";
@@ -29,6 +27,7 @@ function Evaluations() {
   const handleEdit = () => {
     const initialNotes = {};
     const initialMontions = {};
+
     evaluations.forEach((evaluation) => {
       initialNotes[evaluation.id] = {
         note_ordinaire: evaluation.note_ordinaire,
@@ -39,6 +38,7 @@ function Evaluations() {
         evaluation.note_rattrapage
       );
     });
+
     setUpdatedNotes(initialNotes);
     setMontions(initialMontions);
     setEditMode(true);
@@ -83,11 +83,11 @@ function Evaluations() {
         setEvaluations(updatedEvaluations);
         setEditMode(false);
         setUpdatedNotes({});
-        setMontions({}); 
+        setMontions({});
       })
       .catch((err) => {
         setError("Failed to save evaluations.");
-        //console.error("Error saving data:", err);
+        console.error("Error saving data:", err);
       });
   };
 
@@ -101,8 +101,14 @@ function Evaluations() {
       },
     }));
 
-    const updatedNoteOrdinaire = field === "note_ordinaire" ? value : updatedNotes[id].note_ordinaire;
-    const updatedNoteRattrapage = field === "note_rattrapage" ? value : updatedNotes[id].note_rattrapage;
+    const updatedNoteOrdinaire =
+      field === "note_ordinaire"
+        ? value
+        : updatedNotes[id].note_ordinaire;
+    const updatedNoteRattrapage =
+      field === "note_rattrapage"
+        ? value
+        : updatedNotes[id].note_rattrapage;
 
     setMontions((prevMontions) => ({
       ...prevMontions,
@@ -145,24 +151,13 @@ function Evaluations() {
           <thead className="bg-blue-600 text-white">
             <tr>
               <th className="border border-gray-300 px-4 py-2 text-left">#</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">
-                Note Ordinaire
-              </th>
-              <th className="border border-gray-300 px-4 py-2 text-left">
-                Note Rattrapage
-              </th>
-              <th className="border border-gray-300 px-4 py-2 text-left">
-                Année
-              </th>
-              <th className="border border-gray-300 px-4 py-2 text-left">
-                Étudiant
-              </th>
-              <th className="border border-gray-300 px-4 py-2 text-left">
-                Élément
-              </th>
-              <th className="border border-gray-300 px-4 py-2 text-left">
-			  	Validation
-              </th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Note Ordinaire</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Note Rattrapage</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Année</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Étudiant</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">CNE</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Élément</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Validation</th>
             </tr>
           </thead>
           <tbody>
@@ -181,8 +176,13 @@ function Evaluations() {
                     <input
                       type="number"
                       step="0.01"
-                      value={updatedNotes[evaluation.id]?.note_ordinaire ?? evaluation.note_ordinaire}
-                      onChange={(e) => handleChange(e, evaluation.id, "note_ordinaire")}
+                      value={
+                        updatedNotes[evaluation.id]?.note_ordinaire ??
+                        evaluation.note_ordinaire
+                      }
+                      onChange={(e) =>
+                        handleChange(e, evaluation.id, "note_ordinaire")
+                      }
                       className="border p-1 rounded"
                     />
                   ) : (
@@ -194,20 +194,40 @@ function Evaluations() {
                     <input
                       type="number"
                       step="0.01"
-                      value={updatedNotes[evaluation.id]?.note_rattrapage ?? evaluation.note_rattrapage}
-                      onChange={(e) => handleChange(e, evaluation.id, "note_rattrapage")}
-                      disabled={updatedNotes[evaluation.id]?.note_ordinaire >= 12}
+                      value={
+                        updatedNotes[evaluation.id]?.note_rattrapage ??
+                        evaluation.note_rattrapage
+                      }
+                      onChange={(e) =>
+                        handleChange(e, evaluation.id, "note_rattrapage")
+                      }
+                      disabled={
+                        updatedNotes[evaluation.id]?.note_ordinaire >= 12
+                      }
                       className="border p-1 rounded"
                     />
                   ) : (
                     evaluation.note_rattrapage
                   )}
                 </td>
-                <td className="border border-gray-300 px-4 py-2">{evaluation.annee_academique}</td>
-                <td className="border border-gray-300 px-4 py-2">{evaluation.full_name_etudiant}</td>
-                <td className="border border-gray-300 px-4 py-2">{evaluation.element_description}</td>
                 <td className="border border-gray-300 px-4 py-2">
-                  {montions[evaluation.id] ?? getMontion(evaluation.note_ordinaire, evaluation.note_rattrapage)}
+                  {evaluation.annee_academique}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {evaluation.full_name_etudiant}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {evaluation.cne_etudiant}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {evaluation.nom_element}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {montions[evaluation.id] ??
+                    getMontion(
+                      evaluation.note_ordinaire,
+                      evaluation.note_rattrapage
+                    )}
                 </td>
               </tr>
             ))}

@@ -1,35 +1,73 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import searchIcon from "../../assets/icons8-search.svg";
 import LOGO_EST from "../../assets/LOGO_EST.png";
 import api from "../../api";
+import Evaluations from "./Evaluations";
+import ExcelJS from "exceljs";
 
-function GradesHeader({ setSearchedEvaluations }) {
+function GradesHeader({ setSearchedEvaluations, evaluations, elementName }) {
 	const [query, setQuery] = useState("");
 	const [uploading, setUploading] = useState(false);
-	const [file, setFile] = useState(null);
+	const [file, setFile] = useState("");
+	const navigate = useNavigate();
 
+
+	/* const search = async (event) => {
+		event.preventDefault();
+		evaluations.forEach((element) => {
+			if (element.etudiant === query) {
+				setSearchedEvaluations([element]);
+			}
+		});
+	}; */
 	const search = async (event) => {
-		try {
-			event.preventDefault();
-			const parametre = "cne";
-			const value = query;
-			const res = await api.post("/Grades/recherche/", {
-				parametre,
-				value,
-			});
-			setSearchedEvaluations(res.data);
-		} catch (error) {
-			console.log(error);
-		} //in case the status was 404
-	};
-	const load = () => {
+		event.preventDefault();
+		if (!query) {
+		  setSearchedEvaluations(evaluations);
+		} else {
+		  const filteredEvaluations = evaluations.filter((element) =>
+			element.etudiant.cne === query 
+		  );
+		  setSearchedEvaluations(filteredEvaluations); 
+		}
+	  };
+
+	useEffect(() => {
+		if (file) {
+			Import(file);
+			console.log(file);
+		}
+	}, [file]);
+
+	const Import = async (file) => {
+		const workBook = new ExcelJS.Workbook();
 		const reader = new FileReader();
 
-		reader.onload = (e) => {
-			console.log(e.target.result);
-		};
+		reader.onload = async (e) => {
+			const arrayBuffer = e.target.result;
 
-		reader.readAsText(file);
+			await workBook.xlsx.load(arrayBuffer);
+
+			const worksheet = workBook.worksheets[0];
+			const importedEvaluations = [];
+			const meta = {
+				annee_academique: worksheet.getRow(1).getCell(3).value,
+				element: elementName.id,
+			};
+
+			worksheet.eachRow((row, rowNumber) => {
+				if (rowNumber > 3)
+					importedEvaluations.push({
+						note_ordinaire: row.getCell(2).value,
+						note_rattrapage: row.getCell(3).value,
+						etudiant: row.getCell(1).value,
+						element: meta.element,
+						annee_academique: meta.annee_academique,
+					});
+			});
+		};
+		reader.readAsArrayBuffer(file);
 	};
 
 	return (
@@ -44,6 +82,7 @@ function GradesHeader({ setSearchedEvaluations }) {
 				/>
 				<button
 					className={`m-3 w-32 h-12 rounded-md text-gray-800 font-serif font-bold text-xl hover:bg-gray-300`}
+					onClick={() => navigate("/")}
 				>
 					Home
 				</button>
@@ -58,10 +97,9 @@ function GradesHeader({ setSearchedEvaluations }) {
 						placeholder="upload"
 						type="file"
 						className={`m-5 `}
-						value={file}
-						onChange={(inp) => {
-							setFile(inp.target.value);
-							load();
+						onChange={(event) => {
+							const selectedFile = event.target.files[0];
+							setFile(selectedFile);
 						}}
 					/>
 				</div>
