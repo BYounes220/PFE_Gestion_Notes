@@ -63,10 +63,14 @@ function Evaluations({
 	const handleSave = () => {
 		const updates = Object.entries(updatedNotes).map(([id, notes]) => {
 			const evaluation = evaluations.find((ev) => ev.id === parseInt(id));
+			const noteRattrapage = parseFloat(notes.note_rattrapage);
+			const finalNoteRattrapage =
+				noteRattrapage > 12 ? 12 : noteRattrapage;
+
 			return {
 				...evaluation,
 				note_ordinaire: parseFloat(notes.note_ordinaire),
-				note_rattrapage: parseFloat(notes.note_rattrapage),
+				note_rattrapage: finalNoteRattrapage,
 			};
 		});
 
