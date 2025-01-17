@@ -28,7 +28,13 @@ function Grades() {
 			<div className={`flex flex-row w-screen relative `}>
 				<Navbar setElement={setElement} />
 				<div className="overflow-y-auto flex-grow bg-[#A2D2FF] shadow-lg rounded-lg">
-					{filter ? <FilterBox /> : null}
+					{filter ? (
+						<FilterBox
+							setSearchedEvaluations={setSearchedEvaluations}
+							allEvaluations={allEvaluations}
+							elementName={elementName}
+						/>
+					) : null}
 					<Evaluations
 						evaluations={evaluations}
 						setEvaluations={setEvaluations}

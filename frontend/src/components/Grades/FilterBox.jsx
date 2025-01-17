@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import resetIcon from "../../assets/reset.svg";
-function FilterBox() {
+function FilterBox({ setSearchedEvaluations, allEvaluations, elementName }) {
 	const [options, setOptions] = useState({
 		year: "",
 		option: "",
@@ -45,7 +45,158 @@ function FilterBox() {
 		setOptions(parm);
 	};
 
-	const filter = () => {};
+	const filter = (e) => {
+		e.preventDefault();
+		let found = false;
+		const evs = [];
+		const opt = options;
+		let year = opt.year;
+		let yearWasNull = false;
+
+		if (
+			(opt.option == "" || opt.option == "Choisissez un champ") &&
+			opt.value == "" &&
+			(opt.oper == "" || opt.oper == "opérande") &&
+			opt.year != ""
+		) {
+			allEvaluations.forEach((element) => {
+				if (element.annee_academique == opt.year) {
+					evs.push(element);
+					found = true;
+				}
+			});
+		}
+
+		if (
+			(opt.option != "" || opt.option != "Choisissez un champ") &&
+			opt.value != "" &&
+			(opt.oper != "" || opt.oper != "opérande")
+		) {
+			allEvaluations.forEach((element) => {
+				if (year == "" || yearWasNull) {
+					year = element.annee_academique;
+					yearWasNull = true;
+				}
+				if (
+					element.annee_academique == year &&
+					element.nom_element === elementName
+				) {
+					switch (opt.option) {
+						case "le nom":
+							if (
+								opt.oper == "égale" &&
+								element.full_name_etudiant == opt.value
+							) {
+								evs.push(element);
+								found = true;
+							} else if (
+								opt.oper == "pas égal" &&
+								element.full_name_etudiant != opt.value
+							) {
+								evs.push(element);
+								found = true;
+							} else if (
+								opt.oper == "contient" &&
+								element.full_name_etudiant.includes(opt.value)
+							) {
+								evs.push(element);
+								found = true;
+							}
+							break;
+						case "note ordinaire":
+							if (
+								opt.oper == "égale" &&
+								element.note_ordinaire == Number(opt.value)
+							) {
+								evs.push(element);
+								found = true;
+							} else if (
+								opt.oper == "pas égal" &&
+								element.note_ordinaire != Number(opt.value)
+							) {
+								evs.push(element);
+								found = true;
+							} else if (
+								opt.oper == "moins que" &&
+								element.note_ordinaire < Number(opt.value)
+							) {
+								evs.push(element);
+								found = true;
+							} else if (
+								opt.oper == "moins que ou égale" &&
+								element.note_ordinaire <= Number(opt.value)
+							) {
+								evs.push(element);
+								found = true;
+							} else if (
+								opt.oper == "plus que" &&
+								element.note_ordinaire > Number(opt.value)
+							) {
+								evs.push(element);
+								found = true;
+							} else if (
+								opt.oper == "plus ou égale" &&
+								element.note_ordinaire >= Number(opt.value)
+							) {
+								evs.push(element);
+								found = true;
+							}
+							break;
+						case "note rattrapage":
+							if (element.note_rattrapage == null) {
+								console.log("rt");
+								break;
+							}
+							console.log("test");
+							console.log(element);
+
+							if (
+								opt.oper == "égale" &&
+								element.note_rattrapage == Number(opt.value)
+							) {
+								evs.push(element);
+								found = true;
+							} else if (
+								opt.oper == "pas égal" &&
+								element.note_rattrapage != Number(opt.value)
+							) {
+								evs.push(element);
+								found = true;
+							} else if (
+								opt.oper == "moins que" &&
+								element.note_rattrapage < Number(opt.value)
+							) {
+								evs.push(element);
+								found = true;
+							} else if (
+								opt.oper == "moins que ou égale" &&
+								element.note_rattrapage <= Number(opt.value)
+							) {
+								evs.push(element);
+								found = true;
+							} else if (
+								opt.oper == "plus que" &&
+								element.note_rattrapage > Number(opt.value)
+							) {
+								evs.push(element);
+								found = true;
+							} else if (
+								opt.oper == "plus ou égale" &&
+								element.note_rattrapage >= Number(opt.value)
+							) {
+								evs.push(element);
+								found = true;
+							}
+							break;
+						default:
+							break;
+					}
+				}
+			});
+			if (!found) alert("no evalautions trouvées");
+			else setSearchedEvaluations(evs);
+		}
+	};
 
 	useEffect(() => {
 		console.log(options);
@@ -76,7 +227,7 @@ function FilterBox() {
 					>
 						<option>Choisissez un champ</option>
 						<option>le nom</option>
-						<option>note ordiniaire</option>
+						<option>note ordinaire</option>
 						<option>note rattrapage</option>
 						<option>validation</option>
 					</select>
@@ -86,7 +237,7 @@ function FilterBox() {
 						onChange={handleChangeOperand}
 					>
 						<option>opérande</option>
-						{options.option === "note ordiniaire" ||
+						{options.option === "note ordinaire" ||
 						options.option === "note rattrapage" ? (
 							<>
 								<option>égale</option>

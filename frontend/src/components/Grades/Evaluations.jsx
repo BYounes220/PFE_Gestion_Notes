@@ -30,9 +30,9 @@ function Evaluations({
 	useEffect(() => {
 		const evs = allEvaluations.filter((e) => e.nom_element == elementName);
 		setEvaluations(evs);
-		console.log(evs);
 	}, [elementName]);
 	useEffect(() => {
+		console.log(searchedEvaluations);
 		setEvaluations(searchedEvaluations);
 	}, [searchedEvaluations]);
 
