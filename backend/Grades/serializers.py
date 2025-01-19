@@ -1,4 +1,4 @@
-from rest_framework import serializers
+""" from rest_framework import serializers
 from Grades.models import Element, Evaluation, Professeur, Etudiant
 
 
@@ -66,3 +66,4 @@ class ProfesseurSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         professeur = Professeur.objects.create(**validated_data)
         return professeur
+ """

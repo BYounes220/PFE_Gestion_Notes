@@ -1,5 +1,4 @@
-from django.db import models
-# Create your models here.
+""" from django.db import models
 
 class Etudiant(models.Model):
     class GenreChoices(models.TextChoices):
@@ -61,4 +60,4 @@ class Evaluation(models.Model):
         unique_together = ('element', 'etudiant', 'annee_academique')
 
     def __str__(self):
-        return f"{self.id_etudiant} - {self.id_element} ({self.annee})"
+        return f"{self.id_etudiant} - {self.id_element} ({self.annee})" """

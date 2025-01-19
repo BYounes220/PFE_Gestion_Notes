@@ -1,8 +1,9 @@
 from django.urls import path
 
-from .Views.elementsListing import ElementsListing
+from Grades.Views.elementsListing import ElementsListing
 from django.urls import path
-from .views import ProfesseurViewSet, EvaluationListCreateView, EvaluationRetrieveUpdateDestroyView
+from Grades.Controllers.EvaluationView import EvaluationListCreateView , EvaluationRetrieveUpdateDestroyView , EvaluationsAPIView
+from Grades.Controllers.ProfessorView import ProfesseurViewSet
 
 urlpatterns = [
     path('elements/', ElementsListing.as_view(), name='list'),

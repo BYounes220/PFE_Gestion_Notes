@@ -1,12 +1,4 @@
 
-
-from django.http import HttpResponse
-
-# Example view: Homepage of the Grades app
-def index(request):
-    return HttpResponse("Welcome to the Grades app!")
-
-
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -16,6 +8,11 @@ from .models import Professeur, Evaluation
 from rest_framework.views import APIView
 from rest_framework.response import Response  
 from .serializers import ProfesseurSerializer, EvaluationsSerializer
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from Entities.evaluation import evaluation
+from .serializers import EvaluationsSerializer
 
 class ProfesseurViewSet(generics.CreateAPIView):
     queryset = Professeur.objects.all()
@@ -37,11 +34,7 @@ class EvaluationsAPIView(APIView):
         serializer = EvaluationsSerializer(evaluations, many=True)
         return Response(serializer.data)
     
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from .models import Evaluation
-from .serializers import EvaluationsSerializer
+
 @api_view(['PUT'])
 def update_evaluation(request, pk):
     try:

@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'Grades',
     'accounts',
     'rest_framework',
-    'corsheaders'
+    'corsheaders',
+    'insc_reeinsc_admin',
+    'pfe_absence_sfe',
 ]
 
 REST_FRAMEWORK = {
