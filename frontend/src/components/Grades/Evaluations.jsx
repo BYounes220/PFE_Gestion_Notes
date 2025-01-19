@@ -47,13 +47,13 @@ function Evaluations({ evaluations, setEvaluations, }) {
   const handleSave = () => {
 	const updates = Object.entries(updatedNotes).map(([id, notes]) => {
 	  const evaluation = evaluations.find((ev) => ev.id === parseInt(id));
-  	  const noteRattrapage = parseFloat(notes.note_rattrapage);
+	  const noteRattrapage = parseFloat(notes.note_rattrapage);
 	  const finalNoteRattrapage = noteRattrapage > 12 ? 12 : noteRattrapage;
   
 	  return {
 		...evaluation,
 		note_ordinaire: parseFloat(notes.note_ordinaire),
-		note_rattrapage: finalNoteRattrapage, 
+		note_rattrapage: finalNoteRattrapage,
 	  };
 	});
   
@@ -70,28 +70,27 @@ function Evaluations({ evaluations, setEvaluations, }) {
 	  alert("Invalid values. Notes must be numbers between 0 and 20.");
 	  return;
 	}
-
-    Promise.all(
-      updates.map((updatedData) =>
-        api.put(`/Grades/evaluations/${updatedData.id}/`, updatedData)
-      )
-    )
-      .then((responses) => {
-        const updatedEvaluations = evaluations.map((evaluation) => {
-          const updated = responses.find(
-            (res) => res.data.id === evaluation.id
-          );
-          return updated ? updated.data : evaluation;
-        });
-        setEvaluations(updatedEvaluations);
-        setEditMode(false);
-        setUpdatedNotes({});
-        setMontions({});
-      })
-      .catch((err) => {
-        setError("Failed to save evaluations.");
-        console.error("Error saving data:", err);
-      });
+  
+	Promise.all(
+	  updates.map((updatedData) =>
+		api.put(`/Grades/evaluations/${updatedData.id}/`, updatedData)
+	  )
+	)
+	  .then((responses) => {
+		const updatedEvaluations = evaluations.map((evaluation) => {
+		  const updated = responses.find((res) => res.data.id === evaluation.id);
+		  return updated ? updated.data : evaluation;
+		});
+  
+		setEvaluations(updatedEvaluations); 
+		setEditMode(false);
+		setUpdatedNotes({});
+		setMontions({});
+	  })
+	  .catch((err) => {
+		setError("Failed to save evaluations.");
+		console.error("Error saving data:", err);
+	  });
   };
 
   const handleChange = (e, id, field) => {
