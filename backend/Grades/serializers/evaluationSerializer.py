@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from Grades.models import Evaluation
+from Grades.Entities.evaluation import Evaluation
 
 class EvaluationsSerializer(serializers.ModelSerializer):
     #id_etudiant = serializers.PrimaryKeyRelatedField(queryset=Etudiant.objects.all())

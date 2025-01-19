@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from Grades.models import Element
+from insc_reeinsc_admin.entities.Element import Element
 
 
 class ElementSerializer(serializers.ModelSerializer):
