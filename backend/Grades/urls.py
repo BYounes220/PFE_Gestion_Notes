@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .Views.elementsListing import ElementsListing
+from .views.elementsListing import ElementsListing
 from django.urls import path
 from .views import ProfesseurViewSet, EvaluationListCreateView, EvaluationRetrieveUpdateDestroyView
 
