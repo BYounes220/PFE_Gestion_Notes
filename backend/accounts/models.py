@@ -30,7 +30,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         ('staff', 'Staff'),
     ]
     
-    user_id = models.CharField(max_length=10, unique=True,primary_key=True)  # Unique ID for the user
+    user_id = models.CharField(max_length=100, unique=True,primary_key=True)  # Unique ID for the user
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)  # Role of the user
     is_active = models.BooleanField(default=True)  # Active status
     is_staff = models.BooleanField(default=False)  # Staff status for admin access

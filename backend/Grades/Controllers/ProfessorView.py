@@ -1,6 +1,6 @@
 
 from rest_framework import generics
-from Grades.Serializers.professeurSerializer import ProfesseurSerializer
+from Grades.serializers.professeurSerializer import ProfesseurSerializer
 from insc_reeinsc_admin.entities.Professeur import Professeur
 
 class ProfesseurViewSet(generics.CreateAPIView):

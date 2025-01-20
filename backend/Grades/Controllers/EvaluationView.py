@@ -1,13 +1,9 @@
 from rest_framework import generics
-from Grades.Entities.evaluation import Evaluation
-from Grades.Serializers.evaluationSerializer import EvaluationsSerializer
+from Grades.entities.evaluation import Evaluation
+from Grades.serializers.evaluationSerializer import EvaluationsSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework import status
-
-
 
 class EvaluationListCreateView(generics.ListCreateAPIView):
     queryset = Evaluation.objects.all()
@@ -23,9 +19,9 @@ class EvaluationsAPIView(APIView):
         evaluations = Evaluation.objects.all()
         serializer = EvaluationsSerializer(evaluations, many=True)
         return Response(serializer.data)
-    
 
-@api_view(['PUT'])
+
+""" @api_view(['PUT'])
 def update_evaluation(request, pk):
     try:
         evaluation = Evaluation.objects.get(pk=pk)
@@ -37,3 +33,4 @@ def update_evaluation(request, pk):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+ """

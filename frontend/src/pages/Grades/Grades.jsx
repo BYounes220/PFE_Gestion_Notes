@@ -5,9 +5,12 @@ import Evaluations from "../../components/Grades/Evaluations";
 import api from "../../api"; 
 
 function Grades() {
-  const [elementName, setElement] = useState("");
-  const [searchedEvaluations, setSearchedEvaluations] = useState([]);
-  const [evaluations, setEvaluations] = useState([]);
+	//this the name of the selected element in the navbar
+	const [elementName, setElement] = useState("");
+	const [searchedEvaluations, setSearchedEvaluations] = useState([]);
+	const [evaluations, setEvaluations] = useState([]);
+	const [filter, setFilter] = useState(false);
+	const [allEvaluations, setAllEvaluations] = useState([]);
 
   useEffect(() => {
     const fetchEvaluations = async () => {
@@ -53,5 +56,4 @@ function Grades() {
     </div>
   );
 }
-
 export default Grades;

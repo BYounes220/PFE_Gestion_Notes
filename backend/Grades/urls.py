@@ -1,6 +1,6 @@
 from django.urls import path
 
-from Grades.Views.elementsListing import ElementsListing
+from Grades.Controllers.elementsListing import ElementsListing
 from django.urls import path
 from Grades.Controllers.EvaluationView import EvaluationListCreateView , EvaluationRetrieveUpdateDestroyView , EvaluationsAPIView
 from Grades.Controllers.ProfessorView import ProfesseurViewSet
