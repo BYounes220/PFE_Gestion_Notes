@@ -23,6 +23,6 @@ class EvaluationsSerializer(serializers.ModelSerializer):
         ]
 
     def get_full_name_etudiant(self, obj):
-        return f"{obj.etudiant.prenom_etudiant} {obj.etudiant.nom_etudiant}"
+        return f"{obj.etudiant.prenom_std} {obj.etudiant.nom_std}"
     def get_cne_etudiant(self, obj):
-        return obj.etudiant.cne 
+        return obj.etudiant.cne_std 

@@ -1,64 +1,48 @@
 import React, { useEffect, useState } from "react";
 import api from "../../api";
 
-function Evaluations({
-	evaluations,
-	setEvaluations,
-	allEvaluations,
-	setAllEvaluations,
-	elementName,
-	searchedEvaluations,
-}) {
-	const [error, setError] = useState(null);
-	const [editMode, setEditMode] = useState(false);
-	const [updatedNotes, setUpdatedNotes] = useState({});
-	const [montions, setMontions] = useState({});
+function Evaluations({ evaluations, setEvaluations, }) {
+  const [error, setError] = useState(null);
+  const [editMode, setEditMode] = useState(false);
+  const [updatedNotes, setUpdatedNotes] = useState({});
+  const [montions, setMontions] = useState({});
 
-	useEffect(() => {
-		api.get("/Grades/evaluations/")
-			.then((response) => {
-				const evaluationsData = Array.isArray(response.data)
-					? response.data
-					: [response.data];
-				setAllEvaluations(evaluationsData);
-				//console.log(evaluationsData);
-			})
-			.catch(() => {
-				setError("Failed to fetch evaluations.");
-			});
-	}, []);
-	useEffect(() => {
-		const evs = allEvaluations.filter((e) => e.nom_element == elementName);
-		setEvaluations(evs);
-	}, [elementName]);
-	useEffect(() => {
-		console.log(searchedEvaluations);
-		setEvaluations(searchedEvaluations);
-	}, [searchedEvaluations]);
+  useEffect(() => {
+    api.get("/Grades/evaluations/")
+      .then((response) => {
+        const evaluationsData = Array.isArray(response.data)
+          ? response.data
+          : [response.data];
+        setEvaluations(evaluationsData);
+      })
+      .catch(() => {
+        setError("Failed to fetch evaluations.");
+      });
+  }, [setEvaluations]);
 
-	const getMontion = (noteOrdinaire, noteRattrapage) => {
-		return noteOrdinaire >= 12 || noteRattrapage >= 12 ? "VAL" : "NVAL";
-	};
+  const getMontion = (noteOrdinaire, noteRattrapage) => {
+    return noteOrdinaire >= 12 || noteRattrapage >= 12 ? "VAL" : "NVAL";
+  };
 
-	const handleEdit = () => {
-		const initialNotes = {};
-		const initialMontions = {};
+  const handleEdit = () => {
+    const initialNotes = {};
+    const initialMontions = {};
 
-		evaluations.forEach((evaluation) => {
-			initialNotes[evaluation.id] = {
-				note_ordinaire: evaluation.note_ordinaire,
-				note_rattrapage: evaluation.note_rattrapage,
-			};
-			initialMontions[evaluation.id] = getMontion(
-				evaluation.note_ordinaire,
-				evaluation.note_rattrapage
-			);
-		});
+    evaluations.forEach((evaluation) => {
+      initialNotes[evaluation.id] = {
+        note_ordinaire: evaluation.note_ordinaire,
+        note_rattrapage: evaluation.note_rattrapage,
+      };
+      initialMontions[evaluation.id] = getMontion(
+        evaluation.note_ordinaire,
+        evaluation.note_rattrapage
+      );
+    });
 
-		setUpdatedNotes(initialNotes);
-		setMontions(initialMontions);
-		setEditMode(true);
-	};
+    setUpdatedNotes(initialNotes);
+    setMontions(initialMontions);
+    setEditMode(true);
+  };
 
   const handleSave = () => {
 	const updates = Object.entries(updatedNotes).map(([id, notes]) => {

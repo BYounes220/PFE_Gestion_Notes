@@ -1,6 +1,6 @@
 from django.db import models
 from insc_reeinsc_admin.entities.Element import Element
-from  insc_reeinsc_admin.entities.Etudiant import Etudiant
+from insc_reeinsc_admin.entities.Etudiant import Etudiant
 
 class Evaluation(models.Model):
     note_ordinaire = models.DecimalField(max_digits=5, decimal_places=2)

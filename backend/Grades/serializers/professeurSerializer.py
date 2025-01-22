@@ -4,14 +4,13 @@ class ProfesseurSerializer(serializers.ModelSerializer):
     class Meta:
         model = Professeur
         fields = [
-            'id',
             'user',
-            'cin',
-            'nom_professeur',
-            'prenom_professeur',
-            'email_professeur',
-            'num_telephone',
-            'fonction'
+            'cin_prof',
+            'nom_prof',
+            'prenom_prof',
+            'email_prof',
+            'num_tele_prof',
+            'fonction_prof'
         ]
 
     def create(self, validated_data):
