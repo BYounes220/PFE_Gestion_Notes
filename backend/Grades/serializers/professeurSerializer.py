@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from insc_reeinsc_admin.entities.Professeur import Professeur
+
 class ProfesseurSerializer(serializers.ModelSerializer):
     class Meta:
         model = Professeur
