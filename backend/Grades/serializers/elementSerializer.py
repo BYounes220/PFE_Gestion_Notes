@@ -6,11 +6,10 @@ class ElementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Element
         fields = [
-            'id',
-            'nom_element',
-            'volums_horaire',
-            'type_element',
-            'coiefficient',
-            'note_credit',
-            'Professeur'
+            'nom_element', 
+            'module_elm', 
+            'heure_tp', 
+            'heure_td', 
+            'heure_cours', 
+            'penderation_element'
         ]

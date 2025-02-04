@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import api from "../../api";
 
-function Evaluations({ evaluations, setEvaluations, }) {
+function Evaluations({ evaluations, setEvaluations, searchedEvaluations }) {
   const [error, setError] = useState(null);
-  const [editMode, setEditMode] = useState(false);
-  const [updatedNotes, setUpdatedNotes] = useState({});
-  const [montions, setMontions] = useState({});
 
   useEffect(() => {
     api.get("/Grades/evaluations/")
@@ -24,98 +21,33 @@ function Evaluations({ evaluations, setEvaluations, }) {
     return noteOrdinaire >= 12 || noteRattrapage >= 12 ? "VAL" : "NVAL";
   };
 
-  const handleEdit = () => {
-    const initialNotes = {};
-    const initialMontions = {};
+  const handlePrint = () => {
+    // Get the printable table content
+    const printableTable = document.getElementById("printable-table").innerHTML;
 
-    evaluations.forEach((evaluation) => {
-      initialNotes[evaluation.id] = {
-        note_ordinaire: evaluation.note_ordinaire,
-        note_rattrapage: evaluation.note_rattrapage,
-      };
-      initialMontions[evaluation.id] = getMontion(
-        evaluation.note_ordinaire,
-        evaluation.note_rattrapage
-      );
-    });
+    // Create a new window
+    const printWindow = window.open("", "", "height=600,width=800");
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print Table</title>
+          <style>
+            /* Add print-specific styles */
+            body { font-family: Arial, sans-serif; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #000; padding: 8px; text-align: left; }
+            th { background-color: #f2f2f2; }
+          </style>
+        </head>
+        <body>
+          ${printableTable}
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
 
-    setUpdatedNotes(initialNotes);
-    setMontions(initialMontions);
-    setEditMode(true);
-  };
-
-  const handleSave = () => {
-	const updates = Object.entries(updatedNotes).map(([id, notes]) => {
-	  const evaluation = evaluations.find((ev) => ev.id === parseInt(id));
-	  const noteRattrapage = parseFloat(notes.note_rattrapage);
-	  const finalNoteRattrapage = noteRattrapage > 12 ? 12 : noteRattrapage;
-  
-	  return {
-		...evaluation,
-		note_ordinaire: parseFloat(notes.note_ordinaire),
-		note_rattrapage: finalNoteRattrapage,
-	  };
-	});
-  
-	const invalid = updates.some(
-	  (data) =>
-		isNaN(data.note_ordinaire) ||
-		data.note_ordinaire < 0 ||
-		data.note_ordinaire > 20 ||
-		data.note_rattrapage < 0 ||
-		data.note_rattrapage > 20
-	);
-  
-	if (invalid) {
-	  alert("Invalid values. Notes must be numbers between 0 and 20.");
-	  return;
-	}
-  
-	Promise.all(
-	  updates.map((updatedData) =>
-		api.put(`/Grades/evaluations/${updatedData.id}/`, updatedData)
-	  )
-	)
-	  .then((responses) => {
-		const updatedEvaluations = evaluations.map((evaluation) => {
-		  const updated = responses.find((res) => res.data.id === evaluation.id);
-		  return updated ? updated.data : evaluation;
-		});
-  
-		setEvaluations(updatedEvaluations); 
-		setEditMode(false);
-		setUpdatedNotes({});
-		setMontions({});
-	  })
-	  .catch((err) => {
-		setError("Failed to save evaluations.");
-		console.error("Error saving data:", err);
-	  });
-  };
-
-  const handleChange = (e, id, field) => {
-    const value = e.target.value;
-    setUpdatedNotes((prevState) => ({
-      ...prevState,
-      [id]: {
-        ...prevState[id],
-        [field]: value,
-      },
-    }));
-
-    const updatedNoteOrdinaire =
-      field === "note_ordinaire"
-        ? value
-        : updatedNotes[id].note_ordinaire;
-    const updatedNoteRattrapage =
-      field === "note_rattrapage"
-        ? value
-        : updatedNotes[id].note_rattrapage;
-
-    setMontions((prevMontions) => ({
-      ...prevMontions,
-      [id]: getMontion(updatedNoteOrdinaire, updatedNoteRattrapage),
-    }));
+    // Trigger the print dialog
+    printWindow.print();
   };
 
   if (error) {
@@ -131,108 +63,68 @@ function Evaluations({ evaluations, setEvaluations, }) {
       <h1 className="text-3xl font-bold text-center mb-6 text-blue-600">
         Evaluations
       </h1>
-      <div className="mb-4 text-right">
-        {!editMode ? (
-          <button
-            onClick={handleEdit}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Edit
-          </button>
-        ) : (
-          <button
-            onClick={handleSave}
-            className="bg-green-500 text-white px-4 py-2 rounded"
-          >
-            Save
-          </button>
-        )}
+      {/* Print Button */}
+      <div className="text-right mb-4">
+        <button
+          onClick={handlePrint}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
+        >
+          Print Table
+        </button>
       </div>
-      <div className="overflow-x-auto shadow-lg rounded-lg">
+      {/* Printable Table Container */}
+      <div id="printable-table">
         <table className="min-w-full border-collapse border border-gray-300">
           <thead className="bg-blue-600 text-white">
             <tr>
               <th className="border border-gray-300 px-4 py-2 text-left">#</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">CNE</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Nom Complet</th>
               <th className="border border-gray-300 px-4 py-2 text-left">Note Ordinaire</th>
               <th className="border border-gray-300 px-4 py-2 text-left">Note Rattrapage</th>
               <th className="border border-gray-300 px-4 py-2 text-left">Année</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Étudiant</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">CNE</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Élément</th>
               <th className="border border-gray-300 px-4 py-2 text-left">Validation</th>
             </tr>
           </thead>
           <tbody>
-            {evaluations.map((evaluation, index) => (
-              <tr
-                key={evaluation.id}
-                className={
-                  index % 2 === 0
-                    ? "bg-gray-50 hover:bg-blue-50 transition-colors duration-200"
-                    : "bg-white hover:bg-blue-50 transition-colors duration-200"
-                }
-              >
-                <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {editMode ? (
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={
-                        updatedNotes[evaluation.id]?.note_ordinaire ??
-                        evaluation.note_ordinaire
-                      }
-                      onChange={(e) =>
-                        handleChange(e, evaluation.id, "note_ordinaire")
-                      }
-                      className="border p-1 rounded"
-                    />
-                  ) : (
-                    evaluation.note_ordinaire
-                  )}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {editMode ? (
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={
-                        updatedNotes[evaluation.id]?.note_rattrapage ??
-                        evaluation.note_rattrapage
-                      }
-                      onChange={(e) =>
-                        handleChange(e, evaluation.id, "note_rattrapage")
-                      }
-                      disabled={
-                        updatedNotes[evaluation.id]?.note_ordinaire >= 12
-                      }
-                      className="border p-1 rounded"
-                    />
-                  ) : (
-                    evaluation.note_rattrapage
-                  )}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {evaluation.annee_academique}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {evaluation.full_name_etudiant}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {evaluation.cne_etudiant}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {evaluation.nom_element}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {montions[evaluation.id] ??
-                    getMontion(
-                      evaluation.note_ordinaire,
-                      evaluation.note_rattrapage
-                    )}
+            {evaluations && evaluations.length > 0 ? (
+              evaluations.map((evaluation, index) => (
+                <tr
+                  key={evaluation.id}
+                  className={
+                    index % 2 === 0
+                      ? "bg-gray-50 hover:bg-blue-50 transition-colors duration-200"
+                      : "bg-white hover:bg-blue-50 transition-colors duration-200"
+                  }
+                >
+                  <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {evaluation.cne_etudiant}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {evaluation.full_name_etudiant}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {evaluation.note_ordinaire}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {evaluation.note_rattrapage}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {evaluation.annee_academique}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {getMontion(evaluation.note_ordinaire, evaluation.note_rattrapage)}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="7" className="text-center py-4">
+                  No evaluations found
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import searchIcon from "../../assets/icons8-search.svg";
 import LOGO_EST from "../../assets/LOGO_EST.png";
@@ -9,30 +9,28 @@ import ExcelJS from "exceljs";
 
 function GradesHeader({
 	setSearchedEvaluations,
-	allEvaluations,
+	evaluations,
 	elementName,
 	filter,
 	setFilter,
 }) {
-	const [query, setQuery] = useState("");
+	const [searchTerm, setSearchTerm] = useState("");
 	const [uploading, setUploading] = useState(false);
 	const [file, setFile] = useState("");
 	const navigate = useNavigate();
 
-	const search = (e) => {
-		e.preventDefault();
-		if (query === "") return;
-		let found = false;
-		allEvaluations.forEach((element) => {
-			if (
-				element.etudiant === query &&
-				element.nom_element === elementName
-			) {
-				setSearchedEvaluations([element]);
-				found = true;
-			}
-		});
-		if (!found) alert("no evalautions trouvées");
+	const handleSearch = (e) => {
+		const term = e.target.value;
+		setSearchTerm(term);
+		
+		if (term.trim() === "") {
+			setSearchedEvaluations([]);
+		} else {
+			const filtered = evaluations.filter((evaluation) =>
+				evaluation.cne_etudiant.toLowerCase().includes(term.toLowerCase())
+			);
+			setSearchedEvaluations(filtered);
+		}
 	};
 
 	const Filter = (e) => {
@@ -110,27 +108,29 @@ function GradesHeader({
 						}}
 					/>
 				</div>
-				<form
-					className="flex bg-white m-2 mt-3 h-9 place-self-center ml-auto rounded-md"
-					onSubmit={search}
-				>
-					<button
-						className={`h-9 w-10 flex justify-center items-center`}
-						onClick={search}
-					>
-						<img
-							src={searchIcon}
-							alt="Search Icon"
-							className="w-5 h-5"
-						/>
-					</button>
+				<div className="flex bg-white m-2 mt-3 h-9 place-self-center ml-auto rounded-md">
 					<input
-						placeholder="cne"
-						className={`h-9  w-64 rounded-md pl-1 focus:outline-none focus:shadow-green-500 focus:shadow-sm`}
-						name="queryValue"
-						value={query}
-						onChange={(newQuery) => setQuery(newQuery.target.value)}
+						type="text"
+						placeholder="Rechercher par CNE..."
+						value={searchTerm}
+						onChange={handleSearch}
+						className="px-4 py-2 rounded-lg border-2 border-blue-300 focus:outline-none focus:border-blue-500 w-64"
 					/>
+					<svg
+						className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+						width="20"
+						height="20"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						<path
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							strokeWidth="2"
+							d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+						/>
+					</svg>
 					<button
 						className={`h-9 w-10 flex justify-center items-center`}
 						onClick={Filter}
@@ -141,7 +141,7 @@ function GradesHeader({
 							className="w-5 h-5"
 						/>
 					</button>
-				</form>
+				</div>
 			</div>
 		</>
 	);
