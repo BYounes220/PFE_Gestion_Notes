@@ -6,57 +6,53 @@ import api from "../../api";
 import ImportingBox from "../../components/Grades/ImportingBox";
 
 function Grades() {
-	//this the name of the selected element in the navbar
 	const [element, setElement] = useState("");
 	const [searchedEvaluations, setSearchedEvaluations] = useState([]);
 	const [evaluations, setEvaluations] = useState([]);
-	const [filter, setFilter] = useState(false);
-	const [allEvaluations, setAllEvaluations] = useState([]);
+	//const [teacherName, setTeacherName] = useState("");
 
 	useEffect(() => {
 		const fetchEvaluations = async () => {
 			try {
 				const response = await api.get("/Grades/evaluations/");
+				console.log("Fetched evaluations:", response.data);
 				setEvaluations(response.data);
 			} catch (error) {
 				console.error("Failed to fetch evaluations:", error);
 			}
 		};
+
 		fetchEvaluations();
 	}, []);
-
-	useEffect(() => {
-		console.log(element);
-	}, [element]);
 
 	const filteredEvaluations = useMemo(() => {
 		return element
 			? evaluations.filter(
 					(evaluation) => evaluation.nom_element === element
 			  )
-			: [];
+			: []; 
 	}, [element, evaluations]);
 
 	return (
 		<div className={`w-screen flex flex-col h-screen bg-white`}>
 			<GradesHeader
 				setSearchedEvaluations={setSearchedEvaluations}
-				evaluations={filteredEvaluations}
+				evaluations={filteredEvaluations} // Pass only filtered evaluations
 				elementName={element}
+				//teacherName={teacherName}
 			/>
 			<Navbar setElement={setElement} />
-			{/*
 			<div className="overflow-y-auto flex-grow bg-white shadow-lg rounded-lg">
-				{elementName && (
+				{element && (
 					<Evaluations
-						evaluations={filteredEvaluations}
+						evaluations={searchedEvaluations.length > 0 ? searchedEvaluations : filteredEvaluations}
 						setEvaluations={setEvaluations}
-						searchedEvaluations={searchedEvaluations}
 					/>
 				)}
-			</div>*/}
+			</div>
 			<ImportingBox />
 		</div>
 	);
 }
+
 export default Grades;

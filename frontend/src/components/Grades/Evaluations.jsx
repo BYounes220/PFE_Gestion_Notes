@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../api";
 
-function Evaluations({ evaluations, setEvaluations, searchedEvaluations }) {
+function Evaluations({ evaluations, setEvaluations}) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -22,33 +22,80 @@ function Evaluations({ evaluations, setEvaluations, searchedEvaluations }) {
   };
 
   const handlePrint = () => {
-    // Get the printable table content
-    const printableTable = document.getElementById("printable-table").innerHTML;
+    const printContent = `
+      <div class="flex flex-col items-center justify-center p-6">
+        <h1 class="text-2xl font-bold text-blue-700">Liste des Evaluations</h1>
+        <p class="text-lg"><strong>Element:</strong> ${evaluations[0].element}</p>
+        <p class="text-lg"><strong>Année Académique:</strong> ${evaluations[0].annee_academique}</p>
+      </div>
+    `;
 
-    // Create a new window
-    const printWindow = window.open("", "", "height=600,width=800");
+    const printWindow = window.open('', '_blank');
     printWindow.document.write(`
-      <html>
-        <head>
-          <title>Print Table</title>
-          <style>
-            /* Add print-specific styles */
-            body { font-family: Arial, sans-serif; }
-            table { width: 100%; border-collapse: collapse; }
-            th, td { border: 1px solid #000; padding: 8px; text-align: left; }
-            th { background-color: #f2f2f2; }
-          </style>
-        </head>
-        <body>
-          ${printableTable}
-        </body>
+      <!DOCTYPE html>
+      <html lang="fr">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Liste des Evaluations</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+          /* Ensure colors are applied in print */
+          @media print {
+            * {
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+            thead {
+              background-color: #1e40af !important;
+              color: white !important;
+            }
+            th {
+              background-color: #1e40af !important;
+              color: white !important;
+            }
+          }
+        </style>
+      </head>
+      <body class="bg-gray-100 p-8">
+        ${printContent}
+        <div class="overflow-x-auto">
+          <table class="w-11/12 mx-auto border-collapse bg-white shadow-md rounded-lg">
+            <thead>
+              <tr class="bg-blue-700 text-white">
+                <th class="p-3 text-left">#</th>
+                <th class="p-3 text-left">CNE</th>
+                <th class="p-3 text-left">Nom Complet</th>
+                <th class="p-3 text-left">Note Ordinaire</th>
+                <th class="p-3 text-left">Note Rattrapage</th>
+                <th class="p-3 text-left">Validation</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${evaluations.map((evaluation, index) => `
+                <tr class="${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'} border-b">
+                  <td class="p-3">${index + 1}</td>
+                  <td class="p-3">${evaluation.cne_etudiant}</td>
+                  <td class="p-3">${evaluation.full_name_etudiant}</td>
+                  <td class="p-3">${evaluation.note_ordinaire}</td>
+                  <td class="p-3">${evaluation.note_rattrapage}</td>
+                  <td class="p-3 font-semibold ${evaluation.note_ordinaire >= 12 || evaluation.note_rattrapage >= 12 ? 'text-green-600' : 'text-red-600'}">
+                    ${getMontion(evaluation.note_ordinaire, evaluation.note_rattrapage)}
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </body>
       </html>
     `);
-    printWindow.document.close();
 
-    // Trigger the print dialog
+    printWindow.document.close();
     printWindow.print();
-  };
+};
+
+
 
   if (error) {
     return (
@@ -60,20 +107,18 @@ function Evaluations({ evaluations, setEvaluations, searchedEvaluations }) {
 
   return (
     <div className="container mx-auto p-8">
-      <h1 className="text-3xl font-bold text-center mb-6 text-blue-600">
-        Evaluations
-      </h1>
-      {/* Print Button */}
-      <div className="text-right mb-4">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-3xl font-bold text-blue-600">
+          Evaluations
+        </h1>
         <button
+          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
           onClick={handlePrint}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
         >
-          Print Table
+          Imprimer
         </button>
       </div>
-      {/* Printable Table Container */}
-      <div id="printable-table">
+      <div className="overflow-x-auto shadow-lg rounded-lg">
         <table className="min-w-full border-collapse border border-gray-300">
           <thead className="bg-blue-600 text-white">
             <tr>
