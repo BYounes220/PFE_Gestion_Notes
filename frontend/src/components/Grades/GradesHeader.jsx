@@ -3,16 +3,13 @@ import { useNavigate } from "react-router-dom";
 import LOGO_EST from "../../assets/LOGO_EST.png";
 import ExcelJS from "exceljs";
 
-function GradesHeader({
-	setSearchedEvaluations,
-	evaluations,
-	elementName,
-}) {
+function GradesHeader({ setSearchedEvaluations, evaluations, elementName }) {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [uploading, setUploading] = useState(false);
 	const [file, setFile] = useState("");
 	const navigate = useNavigate();
 
+	/*
 	const handleSearch = (e) => {
 		const term = e.target.value;
 		setSearchTerm(term);
@@ -25,7 +22,7 @@ function GradesHeader({
 			);
 			setSearchedEvaluations(filtered);
 		}
-	};
+	};*/
 
 	useEffect(() => {
 		if (file) {
@@ -95,15 +92,6 @@ function GradesHeader({
 							const selectedFile = event.target.files[0];
 							setFile(selectedFile);
 						}}
-					/>
-				</div>
-				<div className="flex bg-white m-2 mt-3 h-9 place-self-center ml-auto rounded-md">
-					<input
-						type="text"
-						placeholder="Rechercher par CNE..."
-						value={searchTerm}
-						onChange={handleSearch}
-						className="px-4 py-2 rounded-lg border-2 border-blue-300 focus:outline-none focus:border-blue-500 w-64"
 					/>
 				</div>
 			</div>
