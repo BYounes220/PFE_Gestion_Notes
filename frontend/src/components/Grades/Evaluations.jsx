@@ -95,8 +95,6 @@ function Evaluations({ evaluations, setEvaluations}) {
     printWindow.print();
 };
 
-
-
   if (error) {
     return (
       <div className="p-4 text-center text-red-600">
