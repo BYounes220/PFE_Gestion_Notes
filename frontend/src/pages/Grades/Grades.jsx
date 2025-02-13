@@ -43,7 +43,7 @@ function Grades() {
 			/>
 			<Navbar setElement={setElement} />
 			{element ? (
-				<div className="overflow-y-auto flex-grow bg-gradient-to-r from-yellow-100 to-yellow-200 w-11/12 m-auto mt-4 mb-4  shadow-lg rounded-lg">
+				<div className="overflow-y-auto flex-grow bg-gradient-to-r from-yellow-100 to-yellow-200 w-11/12 m-auto mt-5 mb-5  shadow-lg rounded-lg">
 					{element && (
 						<Evaluations
 							evaluations={
