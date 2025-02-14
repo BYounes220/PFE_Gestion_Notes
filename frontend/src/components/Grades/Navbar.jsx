@@ -13,9 +13,12 @@ function Navbar({ setElement }) {
 				console.log("Fetched elements:", response.data);
 				if (Array.isArray(response.data)) {
 					setElements(response.data);
-				} else setElements([response.data]);
+				} else {
+					console.error("Unexpected response format:", response.data);
+					setElements([response.data]);
+				}
 			} catch (error) {
-				console.log("Error fetching teacher elements:", error);
+				console.error("Error fetching teacher elements:", error);
 			}
 		};
 		getElements();

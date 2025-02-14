@@ -9,7 +9,7 @@ function Grades() {
 	const [element, setElement] = useState("");
 	const [searchedEvaluations, setSearchedEvaluations] = useState([]);
 	const [evaluations, setEvaluations] = useState([]);
-	//const [teacherName, setTeacherName] = useState("");
+	const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
 	useEffect(() => {
 		const fetchEvaluations = async () => {
@@ -21,7 +21,6 @@ function Grades() {
 				console.error("Failed to fetch evaluations:", error);
 			}
 		};
-
 		fetchEvaluations();
 	}, []);
 
@@ -34,16 +33,15 @@ function Grades() {
 	}, [element, evaluations]);
 
 	return (
-		<div className={`w-screen flex flex-col justify-between  bg-white`}>
+		<div className={`w-screen flex flex-col justify-between bg-white`}>
 			<GradesHeader
 				setSearchedEvaluations={setSearchedEvaluations}
 				evaluations={filteredEvaluations} // Pass only filtered evaluations
 				elementName={element}
-				//teacherName={teacherName}
 			/>
 			<Navbar setElement={setElement} />
 			{element ? (
-				<div className="overflow-y-auto flex-grow bg-gradient-to-r from-yellow-100 to-yellow-200 w-11/12 m-auto mt-5 mb-5  shadow-lg rounded-lg">
+				<div className="overflow-y-auto flex-grow bg-gradient-to-r from-yellow-100 to-yellow-200 w-11/12 m-auto mt-5 mb-5 shadow-lg rounded-lg">
 					{element && (
 						<Evaluations
 							evaluations={
@@ -56,10 +54,29 @@ function Grades() {
 						/>
 					)}
 				</div>
-			) : (
-				<></>
+			) : null}
+
+			{element && (
+				<>
+					<ImportingBox />
+					<div className="footer bg-blue-700 w-screen h-32 mt-10 ml-0 mr-0 text-white flex justify-between items-center text-l font-medium">
+						<p className="ml-10">
+							© <span>{currentYear}</span> Academic Portal. All rights reserved.
+						</p>
+						<div className="mr-10">
+							<a href="" className="mr-10 hover:text-yellow-400 transition-all duration-500">
+								Policy
+							</a>
+							<a href="" className="mr-10 hover:text-yellow-400 transition-all duration-500">
+								Policy
+							</a>
+							<a href="" className="mr-10 hover:text-yellow-400 transition-all duration-500">
+								Policy
+							</a>
+						</div>
+					</div>
+				</>
 			)}
-			{element ? <ImportingBox /> : <></>}
 		</div>
 	);
 }

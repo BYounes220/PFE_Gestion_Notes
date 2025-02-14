@@ -6,9 +6,14 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 class EvaluationListCreateView(generics.ListCreateAPIView):
-    queryset = Evaluation.objects.all()
     serializer_class = EvaluationsSerializer
     permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        queryset = Evaluation.objects.all()
+        annee_academique = self.request.query_params.get('annee_academique')
+        if annee_academique:
+            queryset = queryset.filter(annee_academique=annee_academique)
+        return queryset
 
 class EvaluationRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Evaluation.objects.all()
@@ -33,4 +38,4 @@ def update_evaluation(request, pk):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
- """
+"""
