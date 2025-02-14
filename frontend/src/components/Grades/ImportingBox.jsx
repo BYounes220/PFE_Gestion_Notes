@@ -12,6 +12,7 @@ function ImportingBox() {
 	const handleChange = (e) => {
 		const file = e.target.files[0];
 		if (file) console.log(file);
+		upload();
 	};
 
 	const upload = (file) => {
@@ -40,12 +41,14 @@ function ImportingBox() {
 						annee_academique: meta.annee_academique,
 					});
 			});
+
+			console.log(importedEvaluations);
 		};
 		reader.readAsArrayBuffer(file);
 	};
 
 	return (
-		<div className="bg-yellow-200 w-11/12 h-52 rounded-md shadow-yellow-200 shadow-lg m-auto flex flex-col justify-center items-center hover:scale-105 duration-500">
+		<div className="bg-yellow-200 w-11/12 h-52 rounded-md shadow-yellow-200 shadow-lg m-auto mt-2 mb-6 flex flex-col justify-center items-center hover:scale-105 duration-500">
 			<input
 				type="file"
 				className="hidden"

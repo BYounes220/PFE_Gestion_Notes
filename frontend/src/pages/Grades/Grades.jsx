@@ -30,11 +30,11 @@ function Grades() {
 			? evaluations.filter(
 					(evaluation) => evaluation.nom_element === element
 			  )
-			: []; 
+			: [];
 	}, [element, evaluations]);
 
 	return (
-		<div className={`w-screen flex flex-col h-screen bg-white`}>
+		<div className={`w-screen flex flex-col justify-between  bg-white`}>
 			<GradesHeader
 				setSearchedEvaluations={setSearchedEvaluations}
 				evaluations={filteredEvaluations} // Pass only filtered evaluations
@@ -42,15 +42,24 @@ function Grades() {
 				//teacherName={teacherName}
 			/>
 			<Navbar setElement={setElement} />
-			<div className="overflow-y-auto flex-grow bg-white shadow-lg rounded-lg">
-				{element && (
-					<Evaluations
-						evaluations={searchedEvaluations.length > 0 ? searchedEvaluations : filteredEvaluations}
-						setEvaluations={setEvaluations}
-					/>
-				)}
-			</div>
-			<ImportingBox />
+			{element ? (
+				<div className="overflow-y-auto flex-grow bg-gradient-to-r from-yellow-100 to-yellow-200 w-11/12 m-auto mt-4 mb-4  shadow-lg rounded-lg">
+					{element && (
+						<Evaluations
+							evaluations={
+								searchedEvaluations.length > 0
+									? searchedEvaluations
+									: filteredEvaluations
+							}
+							setEvaluations={setEvaluations}
+							setSearchedEvaluations={setSearchedEvaluations}
+						/>
+					)}
+				</div>
+			) : (
+				<></>
+			)}
+			{element ? <ImportingBox /> : <></>}
 		</div>
 	);
 }
