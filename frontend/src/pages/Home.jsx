@@ -1,5 +1,6 @@
+import TeacherHome from "./TeacherHome";
 function Home() {
-	return <p>hello in the home page</p>;
+	return <TeacherHome></TeacherHome>;
 }
 
 export default Home;
