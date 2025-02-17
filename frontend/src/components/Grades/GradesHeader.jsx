@@ -31,6 +31,7 @@ function GradesHeader({ setSearchedEvaluations, evaluations, elementName }) {
 		}
 	}, [file]);
 
+	/*
 	const Import = async (file) => {
 		const workBook = new ExcelJS.Workbook();
 		const reader = new FileReader();
@@ -59,7 +60,7 @@ function GradesHeader({ setSearchedEvaluations, evaluations, elementName }) {
 			});
 		};
 		reader.readAsArrayBuffer(file);
-	};
+	};*/
 
 	return (
 		<>

@@ -1,8 +1,8 @@
 import uploadIcon from "../../assets/upload.svg";
 import { useRef } from "react";
 import ExcelJS from "exceljs";
-
-function ImportingBox() {
+import api from "../../api";
+function ImportingBox({ element, evaluations }) {
 	const FileInputRef = useRef(null);
 
 	const handleBtnClick = () => {
@@ -11,8 +11,8 @@ function ImportingBox() {
 
 	const handleChange = (e) => {
 		const file = e.target.files[0];
-		if (file) console.log(file);
-		upload();
+		//if (file) console.log(file);
+		upload(file);
 	};
 
 	const upload = (file) => {
@@ -27,22 +27,66 @@ function ImportingBox() {
 			const worksheet = workBook.worksheets[0];
 			const importedEvaluations = [];
 			const meta = {
-				annee_academique: worksheet.getRow(1).getCell(3).value,
-				element: elementName.id,
+				annee_academique: worksheet.getRow(3).getCell(2).value,
+				element: element,
 			};
 
+			const notCreation = evaluations.find((e) => e.element === element);
+			const update = evaluations.length > 0 && notCreation ? true : false;
+
 			worksheet.eachRow((row, rowNumber) => {
-				if (rowNumber > 3)
-					importedEvaluations.push({
-						note_ordinaire: row.getCell(2).value,
-						note_rattrapage: row.getCell(3).value,
-						etudiant: row.getCell(1).value,
-						element: meta.element,
-						annee_academique: meta.annee_academique,
-					});
+				if (rowNumber > 4)
+					if (row.getCell(1).value) {
+						importedEvaluations.push({
+							note_ordinaire: row.getCell(4).value,
+							note_rattrapage: row.getCell(5).value,
+							etudiant: row.getCell(1).value,
+							element: meta.element,
+							annee_academique: meta.annee_academique,
+						});
+						if (update) {
+							const last = importedEvaluations.at(
+								importedEvaluations.length - 1
+							);
+
+							const matchingEvaluation = evaluations.find(
+								(e) =>
+									e.etudiant === last.etudiant &&
+									e.annee_academique ===
+										last.annee_academique &&
+									e.element === last.element
+							);
+
+							if (matchingEvaluation) {
+								importedEvaluations.at(
+									importedEvaluations.length - 1
+								).id = matchingEvaluation.id;
+							}
+						}
+					}
 			});
 
-			console.log(importedEvaluations);
+			//console.log(importedEvaluations);
+
+			try {
+				if (update) {
+					const res = await api.patch(
+						"/Grades/updateEvaluations/",
+						importedEvaluations
+					);
+					console.log("uploading with success");
+					console.log(res.data);
+				} else {
+					const res = await api.post(
+						"/Grades/createEvaluations/",
+						importedEvaluations
+					);
+					console.log("uploading with success");
+					console.log(res.data);
+				}
+			} catch (error) {
+				console.log("uploading evaluation errors");
+			}
 		};
 		reader.readAsArrayBuffer(file);
 	};

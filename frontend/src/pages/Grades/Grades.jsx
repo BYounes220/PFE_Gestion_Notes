@@ -33,7 +33,9 @@ function Grades() {
 	}, [element, evaluations]);
 
 	return (
-		<div className={`w-screen flex flex-col justify-between bg-white`}>
+		<div
+			className={`w-screen min-h-screen flex flex-col justify-between bg-white`}
+		>
 			<GradesHeader
 				setSearchedEvaluations={setSearchedEvaluations}
 				evaluations={filteredEvaluations} // Pass only filtered evaluations
@@ -58,25 +60,35 @@ function Grades() {
 
 			{element && (
 				<>
-					<ImportingBox />
-					<div className="footer bg-blue-700 w-screen h-32 mt-10 ml-0 mr-0 text-white flex justify-between items-center text-l font-medium">
-						<p className="ml-10">
-							© <span>{currentYear}</span> Academic Portal. All rights reserved.
-						</p>
-						<div className="mr-10">
-							<a href="" className="mr-10 hover:text-yellow-400 transition-all duration-500">
-								Policy
-							</a>
-							<a href="" className="mr-10 hover:text-yellow-400 transition-all duration-500">
-								Policy
-							</a>
-							<a href="" className="mr-10 hover:text-yellow-400 transition-all duration-500">
-								Policy
-							</a>
-						</div>
-					</div>
+					<ImportingBox element={element} evaluations={evaluations} />
 				</>
 			)}
+			<div className="footer bg-blue-700 w-screen h-32 mt-10 ml-0 mr-0 text-white flex justify-between items-center text-l font-medium">
+				<p className="ml-10">
+					© <span>{currentYear}</span> Academic Portal. All rights
+					reserved.
+				</p>
+				<div className="mr-10">
+					<a
+						href=""
+						className="mr-10 hover:text-yellow-400 transition-all duration-500"
+					>
+						Policy
+					</a>
+					<a
+						href=""
+						className="mr-10 hover:text-yellow-400 transition-all duration-500"
+					>
+						Policy
+					</a>
+					<a
+						href=""
+						className="mr-10 hover:text-yellow-400 transition-all duration-500"
+					>
+						Policy
+					</a>
+				</div>
+			</div>
 		</div>
 	);
 }
