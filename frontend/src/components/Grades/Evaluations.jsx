@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../../api";
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
   const [error, setError] = useState(null);
@@ -147,95 +148,146 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
   }
 
   return (
-    <div className="container mx-auto">
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-4 p-2">
+    
+    
+    <div className="container mx-auto px-4 py-8">
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
         {/* Academic Year Selection */}
-        <div className="flex items-center mb-2 sm:mb-0">
-          <label htmlFor="academicYear" className="mr-2 font-semibold">
-            Année Académique:
+        <div className="w-full sm:w-64 relative group">
+          <label className="block text-sm font-medium text-blue-600 mb-1 ml-1">
+            <i className="fas fa-calendar-alt mr-2"></i>
+            Année académique
           </label>
           <select
             id="academicYear"
             value={academicYear}
             onChange={(e) => setAcademicYear(e.target.value)}
-            className="px-4 py-2 rounded-lg border-2 border-blue-300 focus:outline-none focus:border-blue-500"
+            className="w-full px-4 py-3 rounded-xl border-2 border-blue-200 bg-white 
+                      focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200
+                      transition-all duration-300 hover:border-blue-300
+                      appearance-none pr-10"
           >
-            <option value="">-- Sélectionnez une année --</option>
+            <option value="">Sélectionner une année</option>
             {availableYears.map((year, index) => (
-              <option key={index} value={year}>
+              <option key={index} value={year} className="py-2">
                 {year}
               </option>
             ))}
           </select>
+          <div className="absolute right-3 top-9 transform -translate-y-1/2 text-blue-400">
+            <i className="fas fa-chevron-down"></i>
+          </div>
         </div>
 
         {/* Search Input */}
-        <div className="flex bg-white m-2 mt-3 h-9 rounded-md">
+        <div className="w-full sm:w-96 relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+            <i className="fas fa-search"></i>
+          </div>
           <input
             type="text"
             placeholder="Rechercher par CNE..."
             value={searchTerm}
             onChange={handleSearch}
-            className="px-4 py-2 rounded-lg border-2 border-blue-300 focus:outline-none focus:border-blue-500 w-64"
+            className="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-blue-200 
+                      focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200
+                      transition-all duration-300 hover:border-blue-300"
           />
         </div>
 
         {/* Print Button */}
         <button
-          className="bg-orange-400 mr-2 text-white font-medium text-lg px-4 py-2 rounded-md hover:bg-orange-600 hover:scale-105 transition-bg duration-500"
+          className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-orange-600 to-orange-600 text-white 
+                    font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 
+                    transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl
+                    flex items-center justify-center"
           onClick={handlePrint}
         >
+          <i className="fas fa-print mr-3 text-lg"></i>
           Imprimer
         </button>
       </div>
 
-      <div className="overflow-x-auto shadow-lg rounded-lg w-full">
-        <table className="min-w-full border-collapse border border-gray-300 bg-white">
-          <thead className="bg-yellow-400 text-black">
+      {/* Table Container */}
+      <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-blue-50">
+        <table className="min-w-full divide-y divide-blue-100">
+          <thead className="bg-gradient-to-r from-blue-500 to-blue-600">
             <tr>
-              <th className="border border-gray-300 px-4 py-2 text-left">#</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">CNE</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Nom Complet</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Note Ordinaire</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Note Rattrapage</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Année</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Validation</th>
+              {['#', 'CNE', 'Nom Complet', 'Note Ordinaire', 'Note Rattrapage', 'Année', 'Validation'].map((header, idx) => (
+                <th key={idx} className="px-6 py-4 text-left text-white font-bold uppercase text-sm">
+                  {header}
+                </th>
+              ))}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="bg-white divide-y divide-blue-100">
             {evaluations && evaluations.length > 0 ? (
               evaluations.map((evaluation, index) => (
                 <tr
                   key={evaluation.id}
-                  className={
-                    index % 2 === 0
-                      ? "[&:nth-child(n)]:bg-blue-100 hover:bg-blue-50 transition-colors duration-200"
-                      : "bg-white hover:bg-blue-50 transition-colors duration-200"
-                  }
+                  className="hover:bg-blue-50 transition-colors duration-200 group"
                 >
-                  <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
-                  <td className="border border-gray-300 px-4 py-2">{evaluation.cne_etudiant}</td>
-                  <td className="border border-gray-300 px-4 py-2">{evaluation.full_name_etudiant}</td>
-                  <td className="border border-gray-300 px-4 py-2">{evaluation.note_ordinaire}</td>
-                  <td className="border border-gray-300 px-4 py-2">{evaluation.note_rattrapage}</td>
-                  <td className="border border-gray-300 px-4 py-2">{evaluation.annee_academique}</td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {getMontion(evaluation.note_ordinaire, evaluation.note_rattrapage)}
+                  <td className="px-6 py-4 text-gray-700 font-medium">{index + 1}</td>
+                  <td className="px-6 py-4">
+                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+                      {evaluation.cne_etudiant}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 font-semibold text-gray-800">
+                    <i className="fas fa-user-graduate mr-3 text-blue-400"></i>
+                    {evaluation.full_name_etudiant}
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center">
+                      <span className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                        <i className="fas fa-file-signature text-blue-600 text-sm"></i>
+                      </span>
+                      {evaluation.note_ordinaire}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center">
+                      <span className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mr-3">
+                        <i className="fas fa-redo-alt text-orange-600 text-sm"></i>
+                      </span>
+                      {evaluation.note_rattrapage}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-blue-600 font-medium">
+                    {evaluation.annee_academique}
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${
+                      getMontion(evaluation.note_ordinaire, evaluation.note_rattrapage) === 'VAL' 
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-red-100 text-red-800'
+                    }`}>
+                      {getMontion(evaluation.note_ordinaire, evaluation.note_rattrapage)}
+                      <i className={`fas ${
+                        getMontion(evaluation.note_ordinaire, evaluation.note_rattrapage) === 'VAL' 
+                          ? 'fa-check-circle ml-2'
+                          : 'fa-times-circle ml-2'
+                      }`}></i>
+                    </span>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="7" className="text-center py-4">
-                  No evaluations found
+                <td colSpan="7" className="px-6 py-8 text-center">
+                  <div className="flex flex-col items-center justify-center text-gray-500">
+                    <i className="fas fa-inbox text-4xl mb-4 text-blue-300"></i>
+                    <p className="text-lg">Veuillez sélectionner une année académique</p>
+                  </div>
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
-    </div>
-  );
+    </div>  
+    );
 }
 
 export default Evaluations;

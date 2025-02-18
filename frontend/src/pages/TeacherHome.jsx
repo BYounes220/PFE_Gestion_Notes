@@ -84,7 +84,7 @@ function TeacherHome() {
 							Continuez vers les services
 						</button>
 					</div>
-					<div className="footer bg-blue-700 w-screen h-32 mb-0 text-white flex justify-between items-center text-l font-medium">
+					{/* <div className="footer bg-blue-700 w-screen h-32 mb-0 text-white flex justify-between items-center text-l font-medium">
 						<p className="ml-10">
 							© <span>{new Date().getFullYear()}</span> Academic
 							Portal. All rights reserved.
@@ -109,13 +109,13 @@ function TeacherHome() {
 								Policy
 							</a>
 						</div>
-					</div>
+					</div> */} 
 				</div>
 			) : (
 				<div className="flex flex-col gap-6  items-center w-screen  min-h-screen bg-gray-50">
 					<GradesHeader></GradesHeader>
 					<div className="flex flex-col justify-center gap-6 w-screen">
-						<div className="flex flex-col sm:flex-row gap-6 justify-center w-screen min-h-40 pl-4 pr-4 ">
+						<div className="flex flex-col sm:flex-row gap-6 justify-center w-screen min-h-40 pl-4 pr-4 cursor-pointer">
 							<StatisticCard
 								logo={fourSqLogo}
 								Title={"Matières enseignées"}
@@ -132,7 +132,7 @@ function TeacherHome() {
 								Num={8}
 							></StatisticCard>
 						</div>
-						<div className="flex flex-col sm:flex-row gap-6 justify-center w-screen min-h-56 pl-4 pr-4">
+						<div className="flex flex-col sm:flex-row gap-6 justify-center w-screen min-h-56 pl-4 pr-4 cursor-pointer">
 							<GateCard
 								logo={clipBoardLogo}
 								Title={"Gestion des notes"}
@@ -153,7 +153,7 @@ function TeacherHome() {
 									"Voir et attribuer les sujets des groupes"
 								}
 								bg={
-									"bg-gradient-to-r from-blue-400 to-indigo-500"
+									"bg-gradient-to-r from-green-400 to-green-700"
 								}
 							></GateCard>
 							<GateCard
@@ -163,7 +163,7 @@ function TeacherHome() {
 									"Suivre l'avancement des stages des étudiants et leurs rapports"
 								}
 								bg={
-									"bg-gradient-to-r from-purple-400 to-pink-500"
+									"bg-gradient-to-r from-blue-400 to-blue-700"
 								}
 							></GateCard>
 						</div>

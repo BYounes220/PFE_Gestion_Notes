@@ -60,7 +60,7 @@ function Navbar({ setElement }) {
 					<option
 						key={i}
 						value={v.nom_element}
-						className="focus:bg-blue-500 text-lg font-semibold"
+						className="focus:bg-blue-500 text-lg font-semibold rounded-sm"
 					>
 						{v.nom_element}
 					</option>

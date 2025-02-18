@@ -92,20 +92,25 @@ function ImportingBox({ element, evaluations }) {
 	};
 
 	return (
-		<div className="bg-yellow-200 w-11/12 h-52 rounded-md shadow-yellow-200 shadow-lg m-auto mt-2 mb-6 flex flex-col justify-center items-center hover:scale-105 duration-500">
-			<input
-				type="file"
-				className="hidden"
-				ref={FileInputRef}
-				onChange={handleChange}
-			/>
-			<button onClick={handleBtnClick} type="file">
-				<img src={uploadIcon} alt="upload icon" className="w-16 h-16" />
-			</button>
-			<h3 className="text-gray-700">
-				Cliquez pour sélectionner un fichier
-			</h3>
-		</div>
+		<div className="bg-yellow-200 w-11/12 h-52 rounded-md shadow-yellow-200 shadow-lg m-auto mt-2 mb-6 flex flex-col justify-center items-center hover:scale-105 duration-500 animate-fadeIn">
+  <input
+    type="file"
+    className="hidden"
+    ref={FileInputRef}
+    onChange={handleChange}
+  />
+  <button onClick={handleBtnClick} type="button">
+    <img
+      src={uploadIcon}
+      alt="upload icon"
+      className="w-16 h-16 animate-bounce"
+    />
+  </button>
+  <h3 className="text-gray-700">
+    Cliquez pour sélectionner un fichier
+  </h3>
+</div>
+
 	);
 }
 export default ImportingBox;
