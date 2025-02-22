@@ -11,6 +11,9 @@ class Evaluation(models.Model):
 
     class Meta:
         unique_together = ('element', 'etudiant', 'annee_academique')
+    
+    def get_cne_etudiant(self, obj):
+        return obj.etudiant.cne_std
 
     def __str__(self):
         return f"{self.id_etudiant} - {self.id_element} ({self.annee})"

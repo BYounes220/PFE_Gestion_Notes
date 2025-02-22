@@ -7,8 +7,8 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [academicYear, setAcademicYear] = useState("");
   const [availableYears, setAvailableYears] = useState([]);
+  const [editingGrades, setEditingGrades] = useState({});
 
-  // Fetch the list of academic years once on mount.
   useEffect(() => {
     api.get("/Grades/annee_academique/")
       .then((response) => {
@@ -19,6 +19,7 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
       });
   }, []);
 
+  // Fetch evaluations when academicYear changes.
   useEffect(() => {
     if (academicYear) {
       api.get("/Grades/evaluations/", { params: { annee_academique: academicYear } })
@@ -63,7 +64,6 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
         <title>Liste des Evaluations</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <style>
-          /* Ensure colors are applied in print */
           @media print {
             * {
               -webkit-print-color-adjust: exact;
@@ -139,6 +139,71 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
     }
   };
 
+  // Toggle the row into edit mode by storing its current grade values.
+  const handleEditClick = (evaluation) => {
+    setEditingGrades(prev => ({
+      ...prev,
+      [evaluation.id]: {
+        note_ordinaire: evaluation.note_ordinaire,
+        note_rattrapage: evaluation.note_rattrapage,
+      }
+    }));
+  };
+
+  // cancel edit mode 
+  const handleCancelClick = (id) => {
+    setEditingGrades(prev => {
+      const newState = { ...prev };
+      delete newState[id];
+      return newState;
+    });
+  };
+
+  // Handle input changes in edit mode.
+  const handleInputChange = (id, field, value) => {
+    setEditingGrades(prev => ({
+      ...prev,
+      [id]: {
+        ...prev[id],
+        [field]: value
+      }
+    }));
+  };
+
+  // save chnaged grade
+  const handleSaveClick = (evaluation) => {
+    // Ensure the values are valid numbers or null if empty.
+    const updatedData = {
+      note_ordinaire: editingGrades[evaluation.id].note_ordinaire !== ""
+        ? Number(editingGrades[evaluation.id].note_ordinaire)
+        : null,
+      note_rattrapage: editingGrades[evaluation.id].note_rattrapage !== ""
+        ? Number(editingGrades[evaluation.id].note_rattrapage)
+        : null,
+    };
+  
+    console.log("Attempting to save evaluation:", evaluation.id, updatedData);
+  
+    api.put(`/Grades/evaluations/${evaluation.id}/`, updatedData)
+      .then((response) => {
+        console.log("Update successful:", response.data);
+        // Update the evaluations array with the new data.
+        setEvaluations((prev) =>
+          prev.map((ev) => (ev.id === evaluation.id ? response.data : ev))
+        );
+        // Exit edit mode.
+        handleCancelClick(evaluation.id);
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.error("Error updating evaluation:", err.response.data);
+        } else {
+          console.error("Error updating evaluation:", err);
+        }
+      });
+  };
+    
+
   if (error) {
     return (
       <div className="p-4 text-center text-red-600">
@@ -148,8 +213,6 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
   }
 
   return (
-    
-    
     <div className="container mx-auto px-4 py-8">
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
@@ -214,7 +277,7 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
         <table className="min-w-full divide-y divide-blue-100">
           <thead className="bg-gradient-to-r from-blue-500 to-blue-600">
             <tr>
-              {['#', 'CNE', 'Nom Complet', 'Note Ordinaire', 'Note Rattrapage', 'Année', 'Validation'].map((header, idx) => (
+              {['#', 'CNE', 'Nom Complet', 'Note Ordinaire', 'Note Rattrapage', 'Validation', 'Actions'].map((header, idx) => (
                 <th key={idx} className="px-6 py-4 text-left text-white font-bold uppercase text-sm">
                   {header}
                 </th>
@@ -223,56 +286,99 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
           </thead>
           <tbody className="bg-white divide-y divide-blue-100">
             {evaluations && evaluations.length > 0 ? (
-              evaluations.map((evaluation, index) => (
-                <tr
-                  key={evaluation.id}
-                  className="hover:bg-blue-50 transition-colors duration-200 group"
-                >
-                  <td className="px-6 py-4 text-gray-700 font-medium">{index + 1}</td>
-                  <td className="px-6 py-4">
-                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                      {evaluation.cne_etudiant}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 font-semibold text-gray-800">
-                    <i className="fas fa-user-graduate mr-3 text-blue-400"></i>
-                    {evaluation.full_name_etudiant}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center">
-                      <span className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                        <i className="fas fa-file-signature text-blue-600 text-sm"></i>
+              evaluations.map((evaluation, index) => {
+                const isEditing = editingGrades.hasOwnProperty(evaluation.id);
+                return (
+                  <tr
+                    key={evaluation.id}
+                    className="hover:bg-blue-50 transition-colors duration-200 group"
+                  >
+                    <td className="px-6 py-4 text-gray-700 font-medium">{index + 1}</td>
+                    <td className="px-6 py-4">
+                      <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+                        {evaluation.cne_etudiant}
                       </span>
-                      {evaluation.note_ordinaire}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center">
-                      <span className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mr-3">
-                        <i className="fas fa-redo-alt text-orange-600 text-sm"></i>
+                    </td>
+                    <td className="px-6 py-4 font-semibold text-gray-800">
+                      <i className="fas fa-user-graduate mr-3 text-blue-400"></i>
+                      {evaluation.full_name_etudiant}
+                    </td>
+                    <td className="px-6 py-4">
+                      {isEditing ? (
+                        <input
+                          type="number"
+                          value={editingGrades[evaluation.id].note_ordinaire}
+                          onChange={(e) => handleInputChange(evaluation.id, 'note_ordinaire', e.target.value)}
+                          className="border rounded p-1"
+                        />
+                      ) : (
+                        <div className="flex items-center">
+                          <span className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                            <i className="fas fa-file-signature text-blue-600 text-sm"></i>
+                          </span>
+                          {evaluation.note_ordinaire}
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">
+                      {isEditing ? (
+                        <input
+                          type="number"
+                          value={editingGrades[evaluation.id].note_rattrapage}
+                          onChange={(e) => handleInputChange(evaluation.id, 'note_rattrapage', e.target.value)}
+                          className="border rounded p-1"
+                        />
+                      ) : (
+                        <div className="flex items-center">
+                          <span className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mr-3">
+                            <i className="fas fa-redo-alt text-orange-600 text-sm"></i>
+                          </span>
+                          {evaluation.note_rattrapage}
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${
+                        getMontion(
+                          isEditing ? editingGrades[evaluation.id].note_ordinaire : evaluation.note_ordinaire, 
+                          isEditing ? editingGrades[evaluation.id].note_rattrapage : evaluation.note_rattrapage
+                        ) === 'VAL'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-red-100 text-red-800'
+                      }`}>
+                        {getMontion(
+                          isEditing ? editingGrades[evaluation.id].note_ordinaire : evaluation.note_ordinaire, 
+                          isEditing ? editingGrades[evaluation.id].note_rattrapage : evaluation.note_rattrapage
+                        )}
+                        <i className={`fas ${
+                          getMontion(
+                            isEditing ? editingGrades[evaluation.id].note_ordinaire : evaluation.note_ordinaire, 
+                            isEditing ? editingGrades[evaluation.id].note_rattrapage : evaluation.note_rattrapage
+                          ) === 'VAL'
+                            ? 'fa-check-circle ml-2'
+                            : 'fa-times-circle ml-2'
+                        }`}></i>
                       </span>
-                      {evaluation.note_rattrapage}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-blue-600 font-medium">
-                    {evaluation.annee_academique}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${
-                      getMontion(evaluation.note_ordinaire, evaluation.note_rattrapage) === 'VAL' 
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800'
-                    }`}>
-                      {getMontion(evaluation.note_ordinaire, evaluation.note_rattrapage)}
-                      <i className={`fas ${
-                        getMontion(evaluation.note_ordinaire, evaluation.note_rattrapage) === 'VAL' 
-                          ? 'fa-check-circle ml-2'
-                          : 'fa-times-circle ml-2'
-                      }`}></i>
-                    </span>
-                  </td>
-                </tr>
-              ))
+                    </td>
+                    <td className="px-6 py-4">
+                      {isEditing ? (
+                        <div className="flex space-x-2">
+                          <button onClick={() => handleSaveClick(evaluation)} className="text-green-600 hover:text-green-800">
+                            <i className="fas fa-save"></i>
+                          </button>
+                          <button onClick={() => handleCancelClick(evaluation.id)} className="text-red-600 hover:text-red-800">
+                            <i className="fas fa-times"></i>
+                          </button>
+                        </div>
+                      ) : (
+                        <button onClick={() => handleEditClick(evaluation)} className="text-blue-600 hover:text-blue-800">
+                          <i className="fas fa-edit"></i>
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })
             ) : (
               <tr>
                 <td colSpan="7" className="px-6 py-8 text-center">
@@ -286,8 +392,8 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
           </tbody>
         </table>
       </div>
-    </div>  
-    );
+    </div>
+  );
 }
 
 export default Evaluations;
