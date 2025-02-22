@@ -11,6 +11,7 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
   const [moyenneOrd, setMoyenneOrd] = useState(0);
   const [moyenneRatt, setMoyenneRatt] = useState(0);
   const [nombreValider , setNombreValider] = useState(0);
+  const [nombreNonValider , setNombreNonValider] = useState(0);
 
   // State to keep track of rows in edit mode and their current grade values.
   const [editingGrades, setEditingGrades] = useState({});
@@ -66,10 +67,19 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
     return sum / evaluations.length;
   };
 
+  const nbrValider = (evaluations) => {
+    if(!evaluations || evaluations.length === 0 ) {
+      return 0;
+    }
+    return evaluations.filter((evaluation) => getMontion(evaluation.note_ordinaire, evaluation.note_rattrapage) === "VAL").length;
+  }
+
   // Recalculate average when evaluations change.
   useEffect(() => {
     setMoyenneOrd(getMoyenneOrdinaire(evaluations));
     setMoyenneRatt(getMoyenneRattrappage(evaluations));
+    setNombreNonValider(evaluations.length - nbrValider(evaluations));
+    setNombreValider(nbrValider(evaluations));
   }, [evaluations]);
 
   // Toggle the row into edit mode.
@@ -220,30 +230,60 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
       {/* Table Container */}
       <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-blue-50">
         <table className="min-w-full divide-y divide-blue-100">
-          <thead className="bg-gradient-to-r from-blue-500 to-blue-600">
-            <tr>
-              <th className="px-6 py-4 text-left text-white font-bold uppercase text-sm">#</th>
-              <th className="px-6 py-4 text-left text-white font-bold uppercase text-sm">CNE</th>
-              <th className="px-6 py-4 text-left text-white font-bold uppercase text-sm">Nom Complet</th>
-              <th className="px-6 py-4 text-left text-white font-bold uppercase text-sm">Note Ordinaire</th>
-              <th className="px-6 py-4 text-left text-white font-bold uppercase text-sm">Note Rattrapage</th>
-              <th className="px-6 py-4 text-left text-white font-bold uppercase text-sm">
-                <div className="flex flex-col">
-                  <span>Validation</span>
-                  <select
-                    value={validationFilter}
-                    onChange={(e) => setValidationFilter(e.target.value)}
-                    className="mt-1 w-full px-2 py-1 rounded border border-white bg-blue-500 text-white"
-                  >
-                    <option value="">Tous</option>
-                    <option value="VAL">Validé</option>
-                    <option value="NVAL">Non validé</option>
-                  </select>
-                </div>
-              </th>
-              <th className="px-6 py-4 text-left text-white font-bold uppercase text-sm">Actions</th>
-            </tr>
-          </thead>
+            <thead className="bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg">
+              <tr className="group">
+                  <th className="px-8 py-5 text-left text-white font-semibold uppercase text-sm tracking-wider border-b-2 border-white/20 relative">
+                      <span className="transform transition-transform duration-200 group-hover:translate-x-1">#</span>
+                  </th>
+                  <th className="px-8 py-5 text-left text-white font-semibold uppercase text-sm tracking-wider border-b-2 border-white/20">
+                      <div className="flex items-center space-x-2">
+                          <i className="fas fa-id-card text-sm opacity-80"></i>
+                          <span>CNE</span>
+                      </div>
+                  </th>
+                  <th className="px-8 py-5 text-left text-white font-semibold uppercase text-sm tracking-wider border-b-2 border-white/20">
+                      <div className="flex items-center space-x-2">
+                          <i className="fas fa-user-tag text-sm opacity-80"></i>
+                          <span>Nom Complet</span>
+                      </div>
+                  </th>
+                  <th className="px-8 py-5 text-left text-white font-semibold uppercase text-sm tracking-wider border-b-2 border-white/20">
+                      <div className="flex items-center space-x-2">
+                          <i className="fas fa-chart-line text-sm opacity-80"></i>
+                          <span>Note Ordinaire</span>
+                      </div>
+                  </th>
+                  <th className="px-8 py-5 text-left text-white font-semibold uppercase text-sm tracking-wider border-b-2 border-white/20">
+                      <div className="flex items-center space-x-2">
+                          <i className="fas fa-redo-alt text-sm opacity-80"></i>
+                          <span>Note Rattrapage</span>
+                      </div>
+                  </th>
+                  <th className="px-8 py-5 text-left text-white font-semibold uppercase text-sm tracking-wider border-b-2 border-white/20">
+                      <div className="flex flex-col space-y-2">
+                          <div className="flex items-center space-x-2">
+                              <i className="fas fa-filter text-sm opacity-80"></i>
+                              <span>Validation</span>
+                          </div>
+                          <select
+                              value={validationFilter}
+                              onChange={(e) => setValidationFilter(e.target.value)}
+                              className="mt-1 w-full px-3 py-1.5 rounded-lg border-2 border-white/20 bg-white/10 backdrop-blur-sm transition-all duration-300 hover:bg-white/20 focus:ring-2 focus:ring-white/50 focus:outline-none"
+                          >
+                              <option value="" className="bg-blue-700/80">Tous</option>
+                              <option value="VAL" className="bg-emerald-600/80">Validé</option>
+                              <option value="NVAL" className="bg-rose-600/80">Non validé</option>
+                          </select>
+                      </div>
+                  </th>
+                  <th className="px-8 py-5 text-left text-white font-semibold uppercase text-sm tracking-wider border-b-2 border-white/20">
+                      <div className="flex items-center space-x-2">
+                          <i className="fas fa-cogs text-sm opacity-80"></i>
+                          <span>Actions</span>
+                      </div>
+                  </th>
+              </tr>
+            </thead>
 
           <tbody className="bg-white divide-y divide-blue-100">
             {filteredEvaluations && filteredEvaluations.length > 0 ? (
@@ -350,19 +390,20 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
           </tbody>
         </table>
       </div>
-      <div className="statistics flex flex-col items-center py-6 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl mt-5 text-white transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl shadow-lg border border-white/10">
+      <div className="statistics flex flex-col items-center py-6 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 rounded-xl mt-5 text-white transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl shadow-lg border border-white/10 relative overflow-hidden">
     <h3 className="text-2xl font-bold mb-4 font-mono tracking-wide border-b-2 border-white/20 pb-2 px-8">
-        📊 Performance Metrics
+        📊 Statistiques
     </h3>
     
-    <div className="flex items-center space-x-8 divide-x divide-white/20">
+    <div className="flex flex-wrap items-center justify-center gap-8 divide-x divide-white/20">
+        {/* Existing Gauges */}
         <div className="flex items-center px-8 group">
             <div className="relative p-3 bg-white/10 rounded-full mr-4 transform group-hover:rotate-12 transition-all">
                 <i className="fa-solid fa-gauge text-xl animate-pulse"></i>
                 <div className="absolute inset-0 border-2 border-white/20 rounded-full animate-spin-slow"></div>
             </div>
             <div>
-                <p className="text-sm font-light opacity-80">Session Ordinaire</p>
+                <p className="text-sm font-light opacity-80">Moyenne Ordinaire</p>
                 <p className="text-2xl font-bold text-emerald-200">
                     {moyenneOrd.toFixed(2)}
                     <span className="text-sm ml-1 text-white/70">avg</span>
@@ -376,16 +417,59 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
                 <div className="absolute inset-0 border-2 border-white/20 rounded-full animate-spin-slow reverse"></div>
             </div>
             <div>
-                <p className="text-sm font-light opacity-80">Session Rattrapage</p>
+                <p className="text-sm font-light opacity-80">Moyenne Rattrapage</p>
                 <p className="text-2xl font-bold text-amber-200">
                     {moyenneRatt.toFixed(2)}
                     <span className="text-sm ml-1 text-white/70">avg</span>
                 </p>
             </div>
-            </div>
-          </div>
-          </div>
         </div>
+
+        {/* Enhanced Validation Stats */}
+        <div className="flex items-center px-8 group">
+            <div className="relative p-3 bg-white/10 rounded-full mr-4 transform group-hover:scale-110 transition-all">
+                <i className="fa-solid fa-scale-balanced text-xl animate-pulse delay-200"></i>
+                <div className="absolute inset-0 border-2 border-white/20 rounded-full animate-spin-slow"></div>
+            </div>
+            <div className="flex flex-col space-y-2">
+                <div className="flex items-center space-x-4">
+                    <div className="valider relative">
+                        <p className="text-sm font-light opacity-80 flex items-center">
+                            <i className="fa-solid fa-check-circle text-emerald-400 mr-1 text-xs"></i>
+                            Validés
+                        </p>
+                        <p className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                            {nombreValider.toFixed(0)}
+                        </p>
+                    </div>
+                    <div className="h-8 w-px bg-white/20"></div>
+                    <div className="nonValider relative">
+                        <p className="text-sm font-light opacity-80 flex items-center">
+                            <i className="fa-solid fa-xmark-circle text-rose-400 mr-1 text-xs"></i>
+                            Non Validés
+                        </p>
+                        <p className="text-2xl font-bold bg-gradient-to-r from-rose-400 to-pink-400 bg-clip-text text-transparent">
+                            {nombreNonValider.toFixed(0)}
+                        </p>
+                    </div>
+                </div>
+                <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+                    <div 
+                        className="bg-gradient-to-r from-emerald-400 to-cyan-400 h-full transition-all duration-500"
+                        style={{ width: `${(nombreValider / (nombreValider + nombreNonValider)) * 100}%` }}
+                    ></div>
+                </div>
+                <p className="text-xs text-white/60 text-center">
+                    Taux de réussite: {((nombreValider / (nombreValider + nombreNonValider)) * 100).toFixed(1)}%
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {/* Animated background elements */}
+    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
+</div>
+  </div>
   );
 }
 
