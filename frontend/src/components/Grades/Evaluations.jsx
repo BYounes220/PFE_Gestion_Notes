@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import api from "../../api";
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import { jsPDF } from "jspdf";
+import "jspdf-autotable";
 
 function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
   const [error, setError] = useState(null);
@@ -166,6 +168,87 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
       </div>
     );
   }
+  const handlePrint = () => {
+    if (evaluations.length === 0) {
+      alert("Aucune évaluation à imprimer!");
+      return;
+    }
+  
+    const doc = new jsPDF();
+    const element = evaluations[0].element;
+    const annee = evaluations[0].annee_academique;
+    const date = new Date().toLocaleDateString('fr-FR');
+  
+    // Add header
+    doc.setFontSize(18);
+    doc.setTextColor(29, 78, 216); // Blue color
+    doc.text(`Liste des Evaluations - ${element}`, 14, 22);
+    
+    // Add subtitle
+    doc.setFontSize(12);
+    doc.setTextColor(100, 116, 139); // Gray color
+    doc.text(`Année Académique: ${annee} | Généré le: ${date}`, 14, 30);
+  
+    // Prepare table data
+    const headers = [
+      "#", 
+      "CNE", 
+      "Nom Complet", 
+      "Note Ordinaire", 
+      "Note Rattrapage", 
+      "Validation"
+    ];
+  
+    const body = evaluations.map((evaluation, index) => [
+      index + 1,
+      evaluation.cne_etudiant,
+      evaluation.full_name_etudiant,
+      evaluation.note_ordinaire,
+      evaluation.note_rattrapage || '-',
+      getMontion(evaluation.note_ordinaire, evaluation.note_rattrapage)
+    ]);
+  
+    // Create the PDF table
+    doc.autoTable({
+      startY: 40,
+      head: [headers],
+      body: body,
+      theme: 'grid',
+      styles: {
+        fontSize: 10,
+        cellPadding: 1.5,
+        valign: 'middle'
+      },
+      headStyles: {
+        fillColor: [250, 204, 21], // Yellow background
+        textColor: 0, // Black text
+        fontSize: 11,
+        fontStyle: 'bold'
+      },
+      alternateRowStyles: {
+        fillColor: [243, 244, 246] // Gray alternate rows
+      },
+      columnStyles: {
+        0: { cellWidth: 10 },
+        5: { cellWidth: 25 }
+      },
+      didDrawCell: (data) => {
+        // Color validation status
+        if (data.column.index === 5) {
+          const status = data.cell.raw;
+          if (status === 'VAL') {
+              doc.setTextColor(34, 197, 94);  // ✅ Green (Valid RGB format)
+          } else {
+              doc.setTextColor(239, 68, 68);  // ✅ Red (Valid RGB format)
+          }
+      }
+      
+      }
+    });
+  
+    // Save the PDF
+    doc.save(`Evaluations_${element}_${annee}.pdf`);
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -219,7 +302,7 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
                     font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transform hover:scale-105 
                     transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center"
           onClick={() => {
-            // Your existing print functionality
+            handlePrint();
           }}
         >
           <i className="fas fa-print mr-3 text-lg"></i>
@@ -371,6 +454,7 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
                       ) : (
                         <button onClick={() => handleEditClick(evaluation)} className="text-blue-600 hover:text-blue-800">
                           <i className="fas fa-edit"></i>
+                          <p className="ml-2">Edit</p>
                         </button>
                       )}
                     </td>
