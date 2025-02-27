@@ -123,7 +123,7 @@ function TeacherHome() {
 							></StatisticCard>
 							<StatisticCard
 								logo={GroupPfeLogo}
-								Title={"Groupes de PFE"}
+								Title={"PFE supervisés"}
 								Num={4}
 							></StatisticCard>
 							<StatisticCard
@@ -135,7 +135,7 @@ function TeacherHome() {
 						<div className="flex flex-col sm:flex-row gap-6 justify-center w-screen min-h-56 pl-4 pr-4 cursor-pointer">
 							<GateCard
 								logo={clipBoardLogo}
-								Title={"Gestion des notes"}
+								Title={"Notes"}
 								Subtext={
 									"Gérer et mettre à jour les notes des étudiants pour vos matières"
 								}
@@ -148,7 +148,7 @@ function TeacherHome() {
 							></GateCard>
 							<GateCard
 								logo={GroupPfeLogo}
-								Title={"Supervision de PFE"}
+								Title={"PFE"}
 								Subtext={
 									"Voir et attribuer les sujets des groupes"
 								}
@@ -158,7 +158,7 @@ function TeacherHome() {
 							></GateCard>
 							<GateCard
 								logo={briefCaseLogo}
-								Title={"Supervision de stage"}
+								Title={"Stage"}
 								Subtext={
 									"Suivre l'avancement des stages des étudiants et leurs rapports"
 								}

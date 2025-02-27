@@ -11,7 +11,7 @@ class EvaluationListCreateView(generics.ListCreateAPIView):
     serializer_class = EvaluationsSerializer
     permission_classes = [IsAuthenticated]
     def get_queryset(self):
-        queryset = Evaluation.objects.all()
+        queryset = Evaluation.objects.all().order_by('etudiant__cne_std')
         annee_academique = self.request.query_params.get('annee_academique')
         if annee_academique:
             queryset = queryset.filter(annee_academique=annee_academique)

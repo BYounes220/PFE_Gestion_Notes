@@ -30,7 +30,7 @@ function ImportingBox({ element, evaluations }) {
 				annee_academique: worksheet.getRow(3).getCell(2).value,
 				element: element,
 			};
-
+			console.log(evaluations);
 			const notCreation = evaluations.find((e) => e.element === element);
 			const update = evaluations.length > 0 && notCreation ? true : false;
 

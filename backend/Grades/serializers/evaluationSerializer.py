@@ -21,6 +21,11 @@ class EvaluationsSerializer(serializers.ModelSerializer):
             'nom_element',
             'cne_etudiant',
         ]
+        extra_kwargs  = {
+            'annee_academique' : {'read_only' : True},
+            'etudiant' : {'read_only':True},
+            'element' : {'read_only':True},
+        }
 
     def get_full_name_etudiant(self, obj):
         return f"{obj.etudiant.prenom_std} {obj.etudiant.nom_std}"
