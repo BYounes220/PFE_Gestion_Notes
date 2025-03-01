@@ -7,8 +7,8 @@ import Login from "./pages/auth/Login";
 import Grades from "./pages/Grades/Grades";
 import Home from "./pages/Home";
 import Evaluations from "./components/Grades/Evaluations";
+import Assignment from "./pages/Grades/Assignment";
 function App() {
-
 	function Logout() {
 		localStorage.clear();
 		return <Navigate to="/login" />;
@@ -46,9 +46,17 @@ function App() {
 						</Protected>
 					}
 				/>
+				<Route
+					path="/admin/assign"
+					element={
+						<Protected>
+							<Assignment />
+						</Protected>
+					}
+				/>
 				<Route path="/login" element={<Login />} />
 				<Route path="/logout" element={<Logout />} />
-				<Route path="/register" element={<RegisterAndLogout />} />			
+				<Route path="/register" element={<RegisterAndLogout />} />
 			</Routes>
 		</BrowserRouter>
 	);
