@@ -43,7 +43,7 @@ function SelectionBox({ setPicked, setChoice }) {
 	};
 
 	return (
-		<div className="flex flex-col items-center gap-2 p-4 mt-3 w-11/12 md:h-52 bg-gradient-to-r from-orange-500 to-blue-600 rounded-xl shadow-lg ">
+		<div className="flex flex-col items-center gap-2 p-4 mt-3 w-11/12 md:h-52 bg-gradient-to-r from-blue-400 to-blue-600 rounded-xl shadow-lg ">
 			<h1 className="text-white  font-bold text-3xl">
 				Portail d'affectation des enseignants
 			</h1>
@@ -59,7 +59,7 @@ function SelectionBox({ setPicked, setChoice }) {
 				>
 					<option value="">Sélectionnze le département</option>
 					{departments.map((d) => (
-						<option value={d.name}>{d.name}</option>
+						<option value={d.name} className="text-black">{d.name}</option>
 					))}
 				</select>
 				<select
@@ -69,7 +69,7 @@ function SelectionBox({ setPicked, setChoice }) {
 				>
 					<option value="">Sélectionnze la filière</option>
 					{branches.map((b) => (
-						<option value={b.name}>{b.name}</option>
+						<option value={b.name} className="text-black">{b.name}</option>
 					))}
 				</select>
 			</div>

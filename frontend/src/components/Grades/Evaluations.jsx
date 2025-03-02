@@ -53,7 +53,6 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
     return Number(note_ordinaire) >= 12 || Number(note_rattrapage) >= 12 ? "VAL" : "NVAL";
   };
 
-  // Calculate the class average using the correct field name.
   const getMoyenneOrdinaire = (evaluations) => {
     if (!evaluations || evaluations.length === 0) {
       return 0;
@@ -155,7 +154,6 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
     }
   };
 
-  // Apply client-side filter based on validation.
   const filteredEvaluations = evaluations.filter(evaluation => {
     if (!validationFilter) return true;
     return getMontion(evaluation.note_ordinaire, evaluation.note_rattrapage) === validationFilter;
@@ -182,12 +180,12 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
     // Add header
     doc.setFontSize(18);
     doc.setTextColor(29, 78, 216); // Blue color
-    doc.text(`Liste des Evaluations - ${element}`, 14, 22);
+    doc.text(`Element - ${element}`, 80, 22);
     
     // Add subtitle
     doc.setFontSize(12);
     doc.setTextColor(100, 116, 139); // Gray color
-    doc.text(`Année Académique: ${annee} | Généré le: ${date}`, 14, 30);
+    doc.text(`Année Académique: ${annee} | Généré le: ${date}`, 50, 30);
   
     // Prepare table data
     const headers = [
@@ -220,7 +218,7 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
         valign: 'middle'
       },
       headStyles: {
-        fillColor: [250, 204, 21], // Yellow background
+        fillColor: [250, 205, 21], // Yellow background
         textColor: 0, // Black text
         fontSize: 11,
         fontStyle: 'bold'
@@ -237,9 +235,9 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
         if (data.column.index === 5) {
           const status = data.cell.raw;
           if (status === 'VAL') {
-              doc.setTextColor(34, 197, 94);  // ✅ Green (Valid RGB format)
+              doc.setTextColor(34, 197, 94);  
           } else {
-              doc.setTextColor(239, 68, 68);  // ✅ Red (Valid RGB format)
+              doc.setTextColor(239, 68, 68);
           }
       }
       
@@ -247,7 +245,7 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
     });
   
     // Save the PDF
-    doc.save(`Evaluations_${element}_${annee}.pdf`);
+    doc.save(`Notes${element}_${annee}.pdf`);
   };
 
   return (
@@ -298,7 +296,7 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
 
         {/* Print Button */}
         <button
-          className="w-full sm:w-auto px-6 py-3 mt-[27px] bg-gradient-to-r from-orange-600 to-orange-600 text-white 
+          className="w-full sm:w-auto px-6 py-3 mt-[27px] bg-gradient-to-r from-orange-700 to-orange-700 text-white 
                     font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transform hover:scale-105 
                     transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center"
           onClick={() => {
@@ -344,18 +342,15 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
                   </th>
                   <th className="px-8 py-5 text-left text-white font-semibold uppercase text-sm tracking-wider border-b-2 border-white/20">
                       <div className="flex flex-col space-y-2">
-                          <div className="flex items-center space-x-2">
-                              <i className="fas fa-filter text-sm opacity-80"></i>
-                              <span>Validation</span>
-                          </div>
                           <select
                               value={validationFilter}
                               onChange={(e) => setValidationFilter(e.target.value)}
                               className="mt-1 w-full px-3 py-1.5 rounded-lg border-2 border-white/20 bg-white/10 backdrop-blur-sm transition-all duration-300 hover:bg-white/20 focus:ring-2 focus:ring-white/50 focus:outline-none"
                           >
-                              <option value="" className="bg-blue-700/80">Tous</option>
-                              <option value="VAL" className="bg-emerald-600/80">Validé</option>
-                              <option value="NVAL" className="bg-rose-600/80">Non validé</option>
+                              <label><i class="fa-solid fa-filter"></i></label>
+                              <option value="" className="bg-blue-700/80">Validations</option>
+                              <option value="VAL" className="text-emerald-600/80">Validé</option>
+                              <option value="NVAL" className="text-rose-600/80">Non validé</option>
                           </select>
                       </div>
                   </th>
