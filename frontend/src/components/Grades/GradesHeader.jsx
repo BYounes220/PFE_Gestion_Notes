@@ -79,8 +79,6 @@ function GradesHeader({ setSearchedEvaluations, evaluations, elementName, showUp
 					<i class="fa-solid fa-house"></i>
 						<span>Home</span>
 					</button>
-
-					
 				</div>
 			</div>
 		</div>

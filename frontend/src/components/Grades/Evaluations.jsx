@@ -118,7 +118,7 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
   const handleSaveClick = (evaluation) => {
     const updatedData = {
       note_ordinaire: Number(editingGrades[evaluation.id].note_ordinaire),
-      note_rattrapage: Number(editingGrades[evaluation.id].note_rattrapage)
+      note_rattrapage: Number(editingGrades[evaluation.id].note_rattrapage) < 12 ? Number(editingGrades[evaluation.id].note_rattrapage) : 12
     };
 
     console.log("Attempting to save evaluation:", evaluation.id, updatedData);
