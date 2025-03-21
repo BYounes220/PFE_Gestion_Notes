@@ -17,7 +17,7 @@ function Grades() {
 		const fetchEvaluations = async () => {
 			try {
 				const response = await api.get("/Grades/evaluations/");
-				console.log("Fetched evaluations:", response.data);
+				//console.log("Fetched evaluations:", response.data);
 				setEvaluations(response.data);
 			} catch (error) {
 				console.error("Failed to fetch evaluations:", error);

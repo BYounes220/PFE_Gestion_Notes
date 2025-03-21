@@ -29,7 +29,7 @@ function Form({ route, method }) {
         const decoded = jwtDecode(res.data.access);
         const roleRoutes = {
           student: "/student",
-          teacher: "/teacher",
+          professors: "/professors",
           staff: "/admin"
         };
         navigate(roleRoutes[decoded.role] || "/");

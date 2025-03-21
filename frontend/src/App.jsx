@@ -8,58 +8,62 @@ import Grades from "./pages/Grades/Grades";
 import Home from "./pages/Home";
 import Evaluations from "./components/Grades/Evaluations";
 import Assignment from "./pages/Grades/Assignment";
+import { ElementProvider } from "./context/ElementContext"; 
+
 function App() {
-	function Logout() {
-		localStorage.clear();
-		return <Navigate to="/login" />;
-	}
+  function Logout() {
+    localStorage.clear();
+    return <Navigate to="/login" />;
+  }
 
-	function RegisterAndLogout() {
-		localStorage.clear();
-		return <Register />;
-	}
+  function RegisterAndLogout() {
+    localStorage.clear();
+    return <Register />;
+  }
 
-	return (
-		<BrowserRouter>
-			<Routes>
-				<Route
-					path="/professors/grades"
-					element={
-						<Protected>
-							<Grades />
-						</Protected>
-					}
-				/>
-				<Route
-					path="/evaluations"
-					element={
-						<Protected>
-							<Evaluations />
-						</Protected>
-					}
-				/>
-				<Route
-					path="/"
-					element={
-						<Protected>
-							<Home />
-						</Protected>
-					}
-				/>
-				<Route
-					path="/admin/assign"
-					element={
-						<Protected>
-							<Assignment />
-						</Protected>
-					}
-				/>
-				<Route path="/login" element={<Login />} />
-				<Route path="/logout" element={<Logout />} />
-				<Route path="/register" element={<RegisterAndLogout />} />
-			</Routes>
-		</BrowserRouter>
-	);
+  return (
+    <ElementProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/professors/grades"
+            element={
+              <Protected>
+                <Grades />
+              </Protected>
+            }
+          />
+          <Route
+            path="/evaluations"
+            element={
+              <Protected>
+                <Evaluations />
+              </Protected>
+            }
+          />
+          <Route
+            path="/"
+            element={
+              <Protected>
+                <Home />
+              </Protected>
+            }
+          />
+          <Route
+            path="/admin/assign"
+            element={
+              <Protected>
+                <Assignment />
+              </Protected>
+            }
+          />
+          <Route path="/login" element={<Login />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route path="/register" element={<RegisterAndLogout />} />
+        </Routes>
+      </BrowserRouter>
+    </ElementProvider>
+  );
 }
 
 export default App;

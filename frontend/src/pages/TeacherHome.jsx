@@ -7,6 +7,7 @@ import GroupPfeLogo from "../assets/user.png";
 import briefCaseLogo from "../assets/briefcase.png";
 import clipBoardLogo from "../assets/clipboard.png";
 import { useNavigate } from "react-router-dom";
+import { useElementContext } from "../context/ElementContext";
 
 // Updated animation variants for vertical entrance
 const containerVariants = {
@@ -45,6 +46,7 @@ const staggerVariants = {
 };
 
 function TeacherHome() {
+  const { elementCount } = useElementContext();
   const [btnClicked, setClicked] = useState(false);
   const navigate = useNavigate();
 
@@ -194,7 +196,7 @@ function TeacherHome() {
                       "PFE supervisés",
                       "Stages supervisés"
                     ][i]}
-                    Num={[4, 4, 8][i]}
+                    Num={[elementCount, 4, 8][i]}
                   />
                 </motion.div>
               ))}
