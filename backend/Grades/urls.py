@@ -5,6 +5,9 @@ from Grades.Controllers.EvaluationView import EvaluationListCreateView , Evaluat
 from Grades.Controllers.ProfessorView import ProfesseurViewSet
 from Grades.Controllers.archiveView import AcademicYearsAPIView
 from Grades.Controllers.assignmentView import AssignTeacherElement,ListAssignments
+from Grades.Controllers.studentGrades import ListSemesters,SemesterGrades
+
+
 urlpatterns = [
     path('elements/', ElementsListing.as_view(), name='list'),
     path('professeur/register/', ProfesseurViewSet.as_view(), name='professeur-register'),
@@ -15,4 +18,6 @@ urlpatterns = [
     path('annee_academique/',AcademicYearsAPIView.as_view(), name="archive"),
     path('assignTeacherElement/', AssignTeacherElement.as_view()),
     path('listAssignments/', ListAssignments.as_view()),
+    path('listOfSemesters/', ListSemesters.as_view()),
+    path('semesterStudentGrades/',SemesterGrades.as_view()),
 ]
