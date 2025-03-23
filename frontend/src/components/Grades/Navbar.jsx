@@ -2,10 +2,8 @@ import React, { useState, useEffect } from "react";
 import api from "../../api";
 import icon from "../../assets/university.png";
 import books from "../../assets/books.png";
-import { useElementContext } from "../../context/ElementContext";
 
 function Navbar({ setElement }) {
-	const { setElementCount } = useElementContext();
 	const [elements, setElements] = useState([]);
 
 	useEffect(() => {
@@ -13,8 +11,7 @@ function Navbar({ setElement }) {
 			try {
 				const response = await api.get("/Grades/elements/");
 				console.log("Fetched elements:", response.data);
-				console.log(response.data.length);
-				setElementCount(response.data.length); // set the number of elements
+				//console.log(response.data.length);
 				if (Array.isArray(response.data)) {
 					setElements(response.data);
 				} else {
@@ -26,7 +23,7 @@ function Navbar({ setElement }) {
 			}
 		};
 		getElements();
-	}, [setElementCount]);
+	}, []);
 
 	const handleChange = (e) => {
 		if (e.target.value !== "none") {
