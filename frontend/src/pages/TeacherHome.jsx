@@ -7,7 +7,9 @@ import GroupPfeLogo from "../assets/user.png";
 import briefCaseLogo from "../assets/briefcase.png";
 import clipBoardLogo from "../assets/clipboard.png";
 import { useNavigate } from "react-router-dom";
-import { useElementContext } from "../context/ElementContext";
+import { useEffect } from "react";
+import api from "../api";
+  
 
 // Updated animation variants for vertical entrance
 const containerVariants = {
@@ -46,10 +48,21 @@ const staggerVariants = {
 };
 
 function TeacherHome() {
-  const { elementCount } = useElementContext();
   const [btnClicked, setClicked] = useState(false);
   const navigate = useNavigate();
+  const [elementCount, setElementCount] = useState(0); 
 
+  useEffect(() => {
+    const fetchElements = async () => {
+      try {
+        const response = await api.get("/Grades/elements/");
+        setElementCount(response.data.length); 
+      } catch (error) {
+        console.error("Error fetching elements:", error);
+      }
+    };
+    fetchElements();
+  }, []); 
   const handleClick = () => {
     setClicked(true);
   };

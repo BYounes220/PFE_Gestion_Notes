@@ -18,7 +18,7 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
   // State to keep track of rows in edit mode and their current grade values.
   const [editingGrades, setEditingGrades] = useState({});
 
-  // Fetch the list of academic years on mount.
+  // Fetch the list of academic years 
   useEffect(() => {
     api.get("/Grades/annee_academique/")
       .then((response) => {
@@ -121,7 +121,7 @@ function Evaluations({ evaluations, setEvaluations, setSearchedEvaluations }) {
       note_rattrapage: Number(editingGrades[evaluation.id].note_rattrapage) < 12 ? Number(editingGrades[evaluation.id].note_rattrapage) : 12
     };
 
-    console.log("Attempting to save evaluation:", evaluation.id, updatedData);
+    console.log("evaluations have been saved!", evaluation.id, updatedData);
 
     api.put(`/Grades/evaluations/${evaluation.id}/`, updatedData)
       .then((response) => {

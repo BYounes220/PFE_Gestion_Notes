@@ -8,7 +8,7 @@ import Grades from "./pages/Grades/Grades";
 import Home from "./pages/Home";
 import Evaluations from "./components/Grades/Evaluations";
 import Assignment from "./pages/Grades/Assignment";
-import { ElementProvider } from "./context/ElementContext"; 
+
 
 function App() {
   function Logout() {
@@ -22,7 +22,7 @@ function App() {
   }
 
   return (
-    <ElementProvider>
+
       <BrowserRouter>
         <Routes>
           <Route
@@ -62,7 +62,6 @@ function App() {
           <Route path="/register" element={<RegisterAndLogout />} />
         </Routes>
       </BrowserRouter>
-    </ElementProvider>
   );
 }
 
