@@ -4,7 +4,7 @@ from django.urls import path
 from Grades.Controllers.EvaluationView import EvaluationListCreateView , EvaluationRetrieveUpdateDestroyView , EvaluationsAPIView, EvaluationCreateView,EvaluationUpdateView
 from Grades.Controllers.ProfessorView import ProfesseurViewSet
 from Grades.Controllers.archiveView import AcademicYearsAPIView
-from Grades.Controllers.assignmentView import AssignTeacherElement,ListAssignments
+from Grades.Controllers.assignmentView import AssignTeacherElement,ListAssignments,ListDepartments,ListFilieres,ListTeachers,ListElements,RemoveEnseignement
 from Grades.Controllers.studentGrades import ListSemesters,SemesterGrades
 
 
@@ -20,4 +20,10 @@ urlpatterns = [
     path('listAssignments/', ListAssignments.as_view()),
     path('listOfSemesters/', ListSemesters.as_view()),
     path('semesterStudentGrades/',SemesterGrades.as_view()),
+    #path('listDesProfsAndDepartments/'),
+    path('listDepartments/',ListDepartments.as_view()),
+    path('listFilieres/',ListFilieres.as_view()),
+    path('listDepartmentTeachers/',ListTeachers.as_view()),
+    path('listFiliereElements/',ListElements.as_view()),
+    path('removeTeacherElement/',RemoveEnseignement.as_view()),
 ]

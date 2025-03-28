@@ -1,5 +1,5 @@
 from django.db import models
-
+from insc_reeinsc_admin.entities.Departement import Departement
 
 class Professeur(models.Model):
     image_prof = models.ImageField(upload_to='uploads/images', null=False, blank=False)
@@ -11,6 +11,14 @@ class Professeur(models.Model):
     num_tele_prof = models.CharField(max_length=15, verbose_name="Numéro de téléphone", unique=True)
     degre_prof = models.CharField(max_length=100, blank=True, null=True)
     fonction_prof = models.CharField(max_length=50, verbose_name="Fonction du professeur", default="Enseignant")
+    departement_prof = models.ForeignKey(
+        Departement, 
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="professeurs",
+        verbose_name="Département professeur",
+    )
 
     def __str__(self):
         return f"{self.nom_prof} {self.prenom_prof}"

@@ -1,11 +1,10 @@
 from django.db import models
-from insc_reeinsc_admin.entities.Professeur import Professeur
 
 class Departement(models.Model):
     id_dept = models.AutoField(primary_key=True)
     nom_departement = models.CharField(max_length=255, verbose_name="Nom du département", unique=True)
     coordonateur_dept = models.ForeignKey(
-        Professeur,
+        'insc_reeinsc_admin.Professeur',  # Use string reference instead of direct import
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

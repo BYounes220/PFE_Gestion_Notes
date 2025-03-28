@@ -5,7 +5,7 @@ class ProfesseurSerializer(serializers.ModelSerializer):
     class Meta:
         model = Professeur
         fields = [
-            'user',
+            #'user',
             'cin_prof',
             'nom_prof',
             'prenom_prof',

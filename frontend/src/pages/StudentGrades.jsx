@@ -48,6 +48,8 @@ export default function StudentGrades() {
 	const handleSelectChange = (e) => {
 		let val = e.target.value;
 		setSemester(val);
+		const sem = semesters.find((s) => s.id_semestre == val);
+		console.log(sem);
 	};
 
 	// Animation variants for the grades box
