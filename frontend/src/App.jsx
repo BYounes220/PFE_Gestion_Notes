@@ -8,6 +8,7 @@ import Grades from "./pages/Grades/Grades";
 import Home from "./pages/Home";
 import Evaluations from "./components/Grades/Evaluations";
 import Assignment from "./pages/Grades/Assignment";
+import NotesDeliberation from "./pages/NotesDeliberation";
 
 
 function App() {
@@ -46,6 +47,14 @@ function App() {
             element={
               <Protected>
                 <Home />
+              </Protected>
+            }
+          />
+          <Route
+            path="/deliberation"
+            element={
+              <Protected>
+                <NotesDeliberation />
               </Protected>
             }
           />
